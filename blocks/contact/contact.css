@@ -32,7 +32,7 @@
   height: 20px;
   padding: 6px;
   border-radius: 50%;
-  background-color: rgb(249 166 108 / 25%);
+  background-color: color-mix(in srgb, var(--accent-color) 25%, transparent);
   fill: var(--navy-color);
 }
 

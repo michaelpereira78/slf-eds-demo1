@@ -1,0 +1,162 @@
+/* Compliance status bar and review dialog: preview / review hosts only */
+body {
+  padding-bottom: var(--author-bar-height, 0);
+}
+
+.compliance-bar {
+  --tone: #6b7280;
+
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 10px 16px;
+  border-top: 4px solid var(--tone);
+  background-color: #fff;
+  color: #1f2124;
+  box-shadow: 0 -6px 20px rgb(0 0 0 / 12%);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.compliance-bar.status-approved { --tone: #1a7f37; }
+.compliance-bar.status-pending { --tone: #9a6700; }
+.compliance-bar.status-changes { --tone: #b42318; }
+.compliance-bar.status-draft { --tone: #57606a; }
+
+.compliance-bar .compliance-dot {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--tone);
+}
+
+.compliance-bar p {
+  flex: 1 1 260px;
+  margin: 0;
+}
+
+.compliance-bar p strong {
+  margin-right: 8px;
+  color: var(--tone);
+}
+
+.compliance-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.compliance-bar button,
+.compliance-bar a:any-link {
+  border: 2px solid #1f2124;
+  border-radius: 999px;
+  padding: 4px 14px;
+  background: #fff;
+  color: #1f2124;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.compliance-bar .compliance-request {
+  border-color: #1f2124;
+  background-color: #1f2124;
+  color: #fff;
+}
+
+.compliance-bar .compliance-close {
+  border: 0;
+  padding: 4px 8px;
+  font-size: 20px;
+  line-height: 1;
+}
+
+@media (width >= 900px) {
+  .compliance-bar {
+    inset: auto auto 16px 16px;
+    max-width: 640px;
+    border-top: 0;
+    border-left: 6px solid var(--tone);
+    border-radius: 12px;
+  }
+
+  body {
+    padding-bottom: 0;
+  }
+}
+
+/* review request dialog */
+.compliance-dialog {
+  width: min(520px, calc(100vw - 32px));
+  border: 0;
+  border-radius: 16px;
+  padding: 24px;
+  color: #1f2124;
+  box-shadow: 0 24px 64px rgb(0 0 0 / 30%);
+}
+
+.compliance-dialog::backdrop {
+  background: rgb(0 0 0 / 45%);
+}
+
+.compliance-dialog h2 {
+  margin-top: 0;
+  color: #1f2124;
+  font-size: 24px;
+}
+
+.compliance-form {
+  display: grid;
+  gap: 6px;
+  font-size: 16px;
+}
+
+.compliance-form label {
+  font-weight: 600;
+}
+
+.compliance-form input:not([type='checkbox']),
+.compliance-form select,
+.compliance-form textarea {
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  border: 1px solid #8c959f;
+  border-radius: 8px;
+}
+
+.compliance-form fieldset {
+  display: grid;
+  gap: 6px;
+  margin: 4px 0 8px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+}
+
+.compliance-form .check {
+  font-weight: 400;
+}
+
+.compliance-page,
+.compliance-note {
+  margin: 0 0 8px;
+  color: #57606a;
+  font-size: 15px;
+}
+
+.compliance-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.compliance-dialog .button {
+  font-size: 16px;
+}

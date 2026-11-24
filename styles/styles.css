@@ -11,7 +11,7 @@
  */
 
 :root {
-  /* colors: Sun Life-inspired palette (demo only, not official brand values) */
+  /* colors: default brand theme "Forest" (fictional demo palette). Other themes: see BRAND THEMES below */
   --background-color: #fff;
   --light-color: #f3f6f4;
   --dark-color: #4b5a54;
@@ -23,7 +23,6 @@
   --navy-color: #1e4d3b;
   --border-color: #d9e2dc;
   --focus-color: #2a6b55;
-  --card-shadow: 0 1px 2px rgb(30 77 59 / 8%), 0 8px 24px rgb(30 77 59 / 8%);
   --radius: 12px;
 
   /* fonts */
@@ -77,7 +76,49 @@
   }
 }
 
+/* ------------------------------------------------------------------
+ * BRAND THEMES
+ * Authors pick a theme per page (or per site, via bulk metadata) with the
+ * `Theme` metadata value. aem.js turns it into a class on <body>, and the
+ * class swaps the design tokens below. No code change per site.
+ * ------------------------------------------------------------------ */
+body.harbour {
+  --light-color: #f2f4fb;
+  --dark-color: #4a5170;
+  --text-color: #1a1f36;
+  --link-color: #1d6b74;
+  --link-hover-color: #1f2a5c;
+  --accent-color: #5fd3c1;
+  --accent-hover-color: #3fbfab;
+  --navy-color: #1f2a5c;
+  --border-color: #d8dcef;
+  --focus-color: #1d6b74;
+  --radius: 18px;
+}
+
+body.slate {
+  --light-color: #f6f4ef;
+  --dark-color: #55524b;
+  --text-color: #1f2124;
+  --link-color: #8a5300;
+  --link-hover-color: #2b2f36;
+  --accent-color: #f2b134;
+  --accent-hover-color: #e09b12;
+  --navy-color: #2b2f36;
+  --border-color: #e2ded3;
+  --focus-color: #8a5300;
+  --heading-font-family: georgia, 'Times New Roman', serif;
+  --radius: 4px;
+}
+
+/* tokens derived from the theme colours (defined on body so themes cascade into them) */
 body {
+  --card-shadow: 0 1px 2px color-mix(in srgb, var(--navy-color) 8%, transparent),
+    0 8px 24px color-mix(in srgb, var(--navy-color) 8%, transparent);
+  --card-shadow-hover: 0 2px 4px color-mix(in srgb, var(--navy-color) 10%, transparent),
+    0 16px 32px color-mix(in srgb, var(--navy-color) 12%, transparent);
+  --accent-tint: color-mix(in srgb, var(--accent-color) 18%, var(--background-color));
+
   display: none;
   margin: 0;
   background-color: var(--background-color);
@@ -136,6 +177,10 @@ pre,
 blockquote {
   margin-top: 0.8em;
   margin-bottom: 0.25em;
+}
+
+main p {
+  overflow-wrap: anywhere;
 }
 
 code,
@@ -383,3 +428,71 @@ main .section.light {
   }
 }
 
+
+/* more section styles (Section Metadata > Style) authors can combine, e.g. "Dark, Centered" */
+main .section.dark,
+main .section.accent {
+  margin: 0;
+  padding: 48px 0;
+}
+
+main .section.dark {
+  background-color: var(--navy-color);
+  color: #fff;
+}
+
+main .section.dark :is(h1, h2, h3, h4, h5, h6) {
+  color: #fff;
+}
+
+main .section.dark a:any-link:not(.button) {
+  color: var(--accent-color);
+}
+
+main .section.dark a.button.secondary {
+  border-color: #fff;
+  color: #fff;
+}
+
+main .section.accent {
+  background-color: var(--accent-tint);
+}
+
+main .section.centered {
+  text-align: center;
+}
+
+main .section.centered > div > p,
+main .section.centered > div > h2 {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 62ch;
+}
+
+main .section.narrow > div {
+  max-width: 760px;
+}
+
+/* stacked shaded sections should touch */
+main > .section:is(.light, .dark, .accent) + .section:is(.light, .dark, .accent) {
+  border-top: 0;
+}
+
+/* approval badge: only rendered on preview/review hosts */
+.approval-badge {
+  display: inline-block;
+  margin: 16px 0 0;
+  padding: 2px 10px;
+  border: 1px dashed currentcolor;
+  border-radius: 999px;
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+/* author-only blocks used by the Sidekick Library never render on the page */
+main .library-metadata,
+main .page-metadata,
+main > .section.library-metadata-container {
+  display: none;
+}

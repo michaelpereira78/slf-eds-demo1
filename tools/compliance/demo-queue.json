@@ -1,0 +1,68 @@
+{
+  "total": 5,
+  "offset": 0,
+  "limit": 5,
+  "data": [
+    {
+      "Page": "/campaigns/retirement-checkup",
+      "Title": "Free retirement check-up (campaign)",
+      "Site": "Maple Ridge Wealth Partners",
+      "Submitted By": "Priya Nair",
+      "Submitted": "2026-11-24",
+      "Status": "Pending review",
+      "Reviewer": "R. Castillo",
+      "Decision Date": "",
+      "Notes": "New December campaign. Uses approved retirement income wording.",
+      "Snapshot": "retirement-checkup-2026"
+    },
+    {
+      "Page": "/harbourview/",
+      "Title": "Harbourview Financial Group home",
+      "Site": "Harbourview Financial Group",
+      "Submitted By": "Grace MacLeod",
+      "Submitted": "2026-11-23",
+      "Status": "Pending review",
+      "Reviewer": "R. Castillo",
+      "Decision Date": "",
+      "Notes": "New site launch.",
+      "Snapshot": "harbourview-launch"
+    },
+    {
+      "Page": "/northstar/",
+      "Title": "Northstar Planning home",
+      "Site": "Northstar Planning",
+      "Submitted By": "Elena Park",
+      "Submitted": "2026-11-21",
+      "Status": "Changes requested",
+      "Reviewer": "R. Castillo",
+      "Decision Date": "2026-11-22",
+      "Notes": "Use the approved insurance wording (AC-2026-022) instead of custom text.",
+      "Snapshot": ""
+    },
+    {
+      "Page": "/",
+      "Title": "Maple Ridge Wealth Partners home",
+      "Site": "Maple Ridge Wealth Partners",
+      "Submitted By": "Jordan Lee",
+      "Submitted": "2026-11-19",
+      "Status": "Approved",
+      "Reviewer": "R. Castillo",
+      "Decision Date": "2026-11-20",
+      "Notes": "Approved as submitted.",
+      "Snapshot": ""
+    },
+    {
+      "Page": "/advisors/jordan-lee",
+      "Title": "Jordan Lee profile",
+      "Site": "Maple Ridge Wealth Partners",
+      "Submitted By": "Jordan Lee",
+      "Submitted": "2026-11-19",
+      "Status": "Approved",
+      "Reviewer": "R. Castillo",
+      "Decision Date": "2026-11-20",
+      "Notes": "",
+      "Snapshot": ""
+    }
+  ],
+  ":type": "sheet"
+}

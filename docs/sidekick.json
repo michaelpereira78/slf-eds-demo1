@@ -1,0 +1,34 @@
+{
+  "project": "Advisor Demo",
+  "plugins": [
+    {
+      "id": "library",
+      "title": "Library",
+      "environments": ["edit"],
+      "url": "/tools/sidekick/library.html"
+    },
+    {
+      "id": "request-compliance-review",
+      "title": "Request compliance review",
+      "environments": ["dev", "preview"],
+      "event": "request-compliance-review"
+    },
+    {
+      "id": "review",
+      "title": "Review...",
+      "environments": ["dev", "preview", "review"],
+      "url": "https://tools.aem.live/tools/snapshot-admin/popover.html",
+      "isPopover": true,
+      "popoverRect": "width:400px; height:400px",
+      "passConfig": true,
+      "passReferrer": true
+    },
+    {
+      "id": "compliance-queue",
+      "title": "Compliance queue",
+      "environments": ["preview", "review"],
+      "url": "/compliance",
+      "pinned": false
+    }
+  ]
+}

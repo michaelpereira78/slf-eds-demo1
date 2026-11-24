@@ -1,0 +1,45 @@
+.callout {
+  margin: 16px 0;
+  padding: 24px;
+  border: 1px solid var(--border-color);
+  border-left: 6px solid var(--accent-color);
+  border-radius: var(--radius);
+  background-color: var(--background-color);
+  box-shadow: var(--card-shadow);
+}
+
+.callout .callout-content > :first-child {
+  margin-top: 0;
+}
+
+.callout .callout-content p {
+  max-width: 75ch;
+}
+
+/* (CTA) variant */
+.callout.cta {
+  border: 0;
+  padding: 40px 24px;
+  background-color: var(--navy-color);
+  color: #fff;
+  text-align: center;
+}
+
+.callout.cta :is(h2, h3) {
+  color: #fff;
+}
+
+.callout.cta .callout-content p {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (width >= 900px) {
+  .callout {
+    padding: 28px 32px;
+  }
+
+  .callout.cta {
+    padding: 56px 32px;
+  }
+}

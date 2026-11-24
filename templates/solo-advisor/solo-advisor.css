@@ -1,0 +1,19 @@
+/* Template: Solo advisor. Larger portrait, reading-width story, accent rule beside headings. */
+body.solo-advisor .hero .hero-media picture {
+  border-radius: var(--radius);
+}
+
+body.solo-advisor main > .section > .default-content-wrapper > h2 {
+  padding-left: 16px;
+  border-left: 6px solid var(--accent-color);
+}
+
+body.solo-advisor main > .section:not(.sidebar, .hero-container) > div {
+  max-width: 880px;
+}
+
+@media (width >= 900px) {
+  body.solo-advisor .hero .hero-media picture {
+    width: 320px;
+  }
+}

@@ -1,3 +1,5 @@
+import { takeApproval } from '../../scripts/author.js';
+
 /**
  * Disclosure block: a styled regulatory note.
  * In production this content lives in ONE shared fragment (/fragments/disclosure)
@@ -6,6 +8,8 @@
  * @param {Element} block The disclosure block element
  */
 export default function decorate(block) {
+  takeApproval(block);
+  const badge = block.querySelector('.approval-badge');
   const content = document.createElement('div');
   content.className = 'disclosure-content';
   [...block.querySelectorAll(':scope > div > div')].forEach((cell) => {
@@ -28,4 +32,5 @@ export default function decorate(block) {
   }
   block.setAttribute('role', 'note');
   block.replaceChildren(content);
+  if (badge) block.append(badge);
 }

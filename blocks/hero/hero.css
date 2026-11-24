@@ -38,7 +38,7 @@
   margin: 0 0 12px;
   padding: 4px 12px;
   border-radius: 999px;
-  background-color: rgb(249 166 108 / 16%);
+  background-color: color-mix(in srgb, var(--accent-color) 16%, transparent);
   color: var(--accent-color);
   font-size: var(--body-font-size-xs);
   font-weight: 700;
@@ -48,7 +48,7 @@
 
 .hero h1 {
   margin: 0 0 16px;
-  max-width: 18ch;
+  max-width: 11em;
   color: #fff;
 }
 
@@ -120,4 +120,50 @@
   .hero .hero-media picture {
     width: 280px;
   }
+}
+
+/* (Centered) variant: campaign / landing pages */
+.hero.centered > div {
+  justify-items: center;
+  text-align: center;
+}
+
+.hero.centered h1,
+.hero.centered .hero-content p {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero.centered .hero-actions {
+  justify-content: center;
+}
+
+/* (Light) variant: pale band instead of the dark brand colour */
+.hero.light {
+  background-color: var(--accent-tint);
+  color: var(--text-color);
+}
+
+.hero.light h1 {
+  color: var(--navy-color);
+}
+
+.hero.light .hero-content p {
+  color: var(--text-color);
+}
+
+.hero.light .hero-eyebrow {
+  background-color: var(--background-color);
+  color: var(--navy-color);
+}
+
+.hero.light a.button.secondary {
+  border-color: var(--navy-color);
+  color: var(--navy-color);
+}
+
+.hero.light a.button.secondary:hover,
+.hero.light a.button.secondary:focus-visible {
+  background-color: var(--navy-color);
+  color: #fff;
 }

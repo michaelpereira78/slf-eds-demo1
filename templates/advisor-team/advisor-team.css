@@ -1,0 +1,10 @@
+/* Template: Advisor team. Section headings get a short accent rule. */
+body.advisor-team main > .section > .default-content-wrapper > h2::after {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 4px;
+  margin-top: 12px;
+  border-radius: 2px;
+  background-color: var(--accent-color);
+}

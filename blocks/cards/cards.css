@@ -8,7 +8,9 @@
 }
 
 .cards > ul > li {
-  border: 1px solid #dadada;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  overflow: hidden;
   background-color: var(--background-color);
 }
 
@@ -24,4 +26,44 @@
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+}
+
+.cards .cards-card-body > :first-child {
+  margin-top: 0;
+}
+
+/* (Capabilities), (Sites), (Templates) variants: text-only cards used on the demo pages */
+.cards:is(.capabilities, .sites, .templates) > ul {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.cards:is(.capabilities, .sites, .templates) > ul > li {
+  display: flex;
+  flex-direction: column;
+  border-top: 6px solid var(--accent-color);
+  box-shadow: var(--card-shadow);
+}
+
+.cards:is(.capabilities, .sites, .templates) .cards-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin: 0;
+  padding: 24px;
+}
+
+.cards:is(.capabilities, .sites, .templates) h3 {
+  margin: 0 0 8px;
+  font-size: var(--heading-font-size-s);
+}
+
+.cards:is(.capabilities, .sites, .templates) p {
+  margin: 0 0 12px;
+}
+
+/* the last link in each card sits at the bottom */
+.cards:is(.capabilities, .sites, .templates) .cards-card-body > p:last-child {
+  margin-top: auto;
+  padding-top: 8px;
+  font-weight: 700;
 }

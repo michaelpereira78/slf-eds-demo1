@@ -10,7 +10,42 @@ import {
   loadSections,
   loadCSS,
   buildBlock,
+  getMetadata,
+  toClassName,
 } from './aem.js';
+import { isAuthorHost } from './author.js';
+
+/**
+ * Approved page templates. Authors choose one with the `Template` metadata value.
+ * Each template lives in /templates/<name>/<name>.css (+ optional <name>.js).
+ * To add a template: create the folder, add it here and add a starter document
+ * (see docs/ADD-A-TEMPLATE.md).
+ */
+const TEMPLATES = {
+  'advisor-team': { js: false },
+  'solo-advisor': { js: false },
+  campaign: { js: true },
+};
+
+/**
+ * Loads the CSS (and JS) of the page's template, if it is an approved one.
+ * @param {Element} main The main element
+ */
+async function loadTemplate(main) {
+  const name = toClassName(getMetadata('template'));
+  const template = TEMPLATES[name];
+  if (!template) return;
+  const base = `${window.hlx.codeBasePath}/templates/${name}/${name}`;
+  try {
+    await Promise.all([
+      loadCSS(`${base}.css`),
+      template.js ? import(`${base}.js`).then((mod) => mod.default && mod.default(main)) : null,
+    ]);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(`Template ${name} failed to load`, error);
+  }
+}
 
 if (window.trustedTypes && window.trustedTypes.createPolicy) {
   const innerTT = window.trustedTypes.createPolicy('tt-inner', {
@@ -165,6 +200,7 @@ async function loadEager(doc) {
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
+    await loadTemplate(main);
     document.body.classList.add('appear');
     await loadSection(main.querySelector('.section'), waitForFirstImage);
   }
@@ -197,6 +233,11 @@ async function loadLazy(doc) {
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
+
+  // compliance status bar + "Request review" (preview, review and local hosts only)
+  if (isAuthorHost() && window.self === window.top) {
+    import('./compliance.js').then((mod) => mod.default());
+  }
 }
 
 /**

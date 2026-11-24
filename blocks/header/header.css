@@ -297,7 +297,7 @@ header nav .nav-brand a:any-link::before {
   height: 28px;
   border-radius: 8px;
   background-color: var(--accent-color);
-  box-shadow: inset -8px -8px 0 rgb(30 77 59 / 18%);
+  box-shadow: inset -8px -8px 0 color-mix(in srgb, var(--navy-color) 30%, transparent);
 }
 
 header nav .nav-sections a:any-link {

@@ -1,0 +1,34 @@
+/* Template: Campaign. Focused header (brand + one button), bigger hero, sticky CTA on phones. */
+body.campaign header nav .nav-sections,
+body.campaign header nav .nav-hamburger {
+  display: none;
+}
+
+body.campaign .hero h1 {
+  max-width: 12em;
+}
+
+body.campaign .campaign-sticky-cta {
+  position: fixed;
+  inset: auto 0 var(--author-bar-height, 0);
+  z-index: 10;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  background-color: var(--background-color);
+  box-shadow: 0 -4px 16px color-mix(in srgb, var(--navy-color) 16%, transparent);
+  transform: translateY(110%);
+  transition: transform 0.25s ease;
+}
+
+body.campaign .campaign-sticky-cta.visible {
+  transform: none;
+}
+
+body.campaign .campaign-sticky-cta a.button {
+  width: 100%;
+}
+
+@media (width >= 900px) {
+  body.campaign .campaign-sticky-cta {
+    display: none;
+  }
+}

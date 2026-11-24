@@ -1,139 +1,98 @@
-# Advisor site demo on Adobe Edge Delivery Services
+# Advisor web platform demo on Adobe Edge Delivery Services
 
-A small, responsive demo site that shows how easy it is to run an advisor team website on
-[Adobe Edge Delivery Services (EDS)](https://www.aem.live/): advisors edit a Word document,
-click **Preview** and **Publish** in AEM Sidekick, and the page updates in seconds.
+A business-user demo showing that advisor websites on [Adobe Edge Delivery Services (EDS)](https://www.aem.live/)
+can be created, edited, re-styled and approved without a developer. Everything is authored in Google
+Docs (or Word) and runs on one shared codebase.
 
-> **Demo only. Not affiliated with Sun Life.** "Maple Ridge Wealth Partners" and every person,
-> photo, phone number (555 numbers) and email address (`@example.com`) on this site are fictional.
-> The avatars are generated initials placeholders, not photos of real people. No Sun Life logos
-> or trademarks are used; the colours are only *a neutral forest-green and coral palette, deliberately unlike any real brand.
+> **Demo only. Not affiliated with Sun Life.** Maple Ridge Wealth Partners, Harbourview Financial
+> Group, Northstar Planning and every person, phone number (555) and email address (`@example.com`)
+> are fictional. The colours are deliberately unlike any real brand.
 
-| | URL |
-|---|---|
-| Preview (after setup) | https://main--slf-eds-demo1--michaelpereira78.aem.page/ |
-| Live (after setup) | https://main--slf-eds-demo1--michaelpereira78.aem.live/ |
-| Advisor profile page | `/advisors/jordan-lee` on either host |
+**Start here:** https://main--slf-eds-demo1--michaelpereira78.aem.page/demo (after the content
+upload in [docs/ADMIN-SETUP.md](docs/ADMIN-SETUP.md)).
+**Presenter script:** [DEMO-SCRIPT.md](DEMO-SCRIPT.md), a 12-minute walkthrough of all seven capabilities.
 
-## What's in it
+## The seven capabilities and how each is built
 
-Two pages, modelled on the structure of a typical advisor team page:
+| # | Capability | Where to see it | How it works (all standard aem.live features) |
+|---|---|---|---|
+| 1 | **Generate new websites** | `/new-site`, `/harbourview/`, `/northstar/` | The `site-request` block is the intake form: picking a theme re-themes the page live, and submitting gives the exact generator command. [`tools/new-site/new-site.py`](tools/new-site/new-site.py) writes the starter documents (home, nav, footer) already set to the theme and template, plus `create-site.sh`, the single [repoless](https://www.aem.live/docs/repoless) Admin API call (`PUT /config/{org}/sites/{site}.json`) that creates a new site on this same code. Creating a site needs an admin token. `--mode folder` instead creates a sub-site inside this site, which is how Harbourview and Northstar are set up (their own `Nav`/`Footer` metadata). |
+| 2 | **Content changes** | any page | Edit the Google Doc, then Sidekick **Preview**, then **Publish**. |
+| 3 | **Minor layout changes** | `/layouts` | Section Metadata `Style`: `Light`, `Dark`, `Accent`, `Centered`, `Narrow`, `Sidebar`, combinable (`Dark, Centered`). Block variants: `Hero (Light)`, `Hero (Centered)`, `Hero (Profile)`, `Contact (Card)`, `Callout (CTA)`, `Cards (...)`. |
+| 4 | **Templates: approved set plus a way to add more** | `/templates`, `/campaigns/retirement-checkup` | `Template` metadata loads `templates/<name>/<name>.css` (and `.js`) from an **allow-list** in `scripts/scripts.js`: `advisor-team`, `solo-advisor`, `campaign` (focused header, sticky phone call to action). Starter docs live in `tools/sidekick/templates/` and appear in the Sidekick **Library** as templates. See [docs/ADD-A-TEMPLATE.md](docs/ADD-A-TEMPLATE.md). |
+| 5 | **Custom branding per site** | Maple Ridge (Forest), Harbourview (Harbour), Northstar (Slate) | `Theme` metadata becomes a body class, and `body.harbour` / `body.slate` in `styles/styles.css` swap the design tokens (colours, heading font, corner radius). Blocks use tokens only, so every block follows the theme. |
+| 6 | **Authoring with approved content** | `/approved-content`, Sidekick > Library > Approved content | Compliance-owned fragments under `/fragments/` (product descriptions, a call to action, the disclosure). A link on its own line embeds the fragment, and advisors can't change the wording. Each carries an approval ID, shown as a badge on preview only. The custom Sidekick Library plugin [`tools/sidekick/plugins/approved-content`](tools/sidekick/plugins/approved-content/approved-content.js) lists them from the `helix-approved-content` sheet with **Copy link**. |
+| 7 | **Compliance review and approval** | status bar on every preview page, `/compliance` | Preview pages (`*.aem.page`, `*.aem.reviews`, localhost only, never the live site) show a status bar: Not yet submitted, Pending review, Changes requested or Approved. **Request review** (in the bar, or the custom Sidekick button) opens a checklist dialog. `/compliance` is the review queue with Approve / Request changes and **real** preview and publish times from the Admin status API. Queue data comes from the Compliance-owned `compliance-queue` sheet (fallback: `tools/compliance/demo-queue.json`), and clicks made during a demo are kept in the browser. In production the locking and publishing come from native [Snapshots and Reviews](https://www.aem.live/docs/snapshots-reviews) (Sidekick **Review...**: request review, then approve to publish or reject to unlock), with **Publish restricted to a Compliance role** ([roles](https://www.aem.live/docs/authentication-setup-authoring)). No Power Automate. |
 
-1. **Team home page** (`/`, document `index`): hero, team profile cards, contact and office
-   details, and the regulatory disclosure.
-2. **Advisor profile page** (`/advisors/jordan-lee`): bigger photo, bio, services list and a
-   contact card, reusing the same blocks.
+## Pages (content documents)
 
-### Blocks (all vanilla JS/CSS, in `blocks/<name>/<name>.js|css`)
+| Path | Purpose | Template / Theme | Compliance in demo |
+|---|---|---|---|
+| `/demo` | presenter hub: seven capability cards | n/a / Forest | n/a |
+| `/` , `/advisors/jordan-lee` | Maple Ridge team site and profile | advisor-team / Forest | Approved |
+| `/harbourview/` (+ nav, footer) | second firm | advisor-team / Harbour | Pending review |
+| `/northstar/` (+ nav, footer) | solo practice | solo-advisor / Slate | Changes requested |
+| `/campaigns/retirement-checkup` | campaign landing page | campaign / Forest | Pending review |
+| `/layouts`, `/templates`, `/approved-content`, `/new-site`, `/compliance` | capability pages | n/a / Forest | n/a |
+| `/fragments/...` | approved content (5 fragments) | n/a | Approved (badge) |
+| `/tools/sidekick/templates/*`, `/tools/sidekick/blocks/*`, `/tools/sidekick/library` (sheet) | Sidekick Library content | n/a | n/a |
+| `/compliance-queue` (sheet) | review queue owned by Compliance | n/a | n/a |
 
-| Block | How authors write it in Word | What it renders |
-|---|---|---|
-| `hero` | One cell: short eyebrow line, Heading 1, intro paragraph, **bold link** (primary button), *italic link* (secondary button). `Hero (Profile)` adds an image cell on the left. | Forest-green hero band with coral accent and buttons; profile variant shows a round portrait. |
-| `team-cards` | One table row per person: image \| name, credentials \| title \| bio \| email \| phone. Making the name a link adds a "View profile" link. | Card grid: 1 column on mobile, 2 on tablet, 3 on desktop. Email and phone become `mailto:`/`tel:` links. Cells are detected defensively, so a missing phone or email does not break anything. |
-| `contact` | Two-column rows: label \| value (Office, Main line, Email, Hours, Directions). `Contact (Card)` is the compact sidebar version. | Icon list with tap-to-call / tap-to-email links and a "Get directions" button. |
-| `disclosure` | One cell: heading + text. | Styled regulatory note (`role="note"`). |
-| `header` / `footer` | The `nav` and `footer` documents (boilerplate blocks, restyled). | Text wordmark "Advisor Demo", Home / Our team / Contact, mobile hamburger, and a visible **"Demo, not affiliated with Sun Life"** banner in the footer. |
+## Repository layout
 
-Section styles (Section Metadata → Style): `Light` (warm grey band) and `Sidebar` (main content
-on the left, the last block, e.g. the contact card, sticky on the right on desktop).
+```
+blocks/             hero, team-cards, contact, disclosure, callout, cards, columns, fragment,
+                    site-request (intake form), compliance-queue (review queue), library-metadata (hidden)
+templates/          advisor-team, solo-advisor, campaign (approved templates)
+styles/styles.css   tokens, BRAND THEMES (forest default, harbour, slate), section styles
+styles/compliance.css   status bar and review dialog (preview hosts only)
+scripts/compliance*.js  status bar, review dialog, queue data
+tools/sidekick/     library.html + approved-content plugin (served by EDS)
+tools/compliance/demo-queue.json   fallback queue data
+tools/content.py    single source of truth for all demo content
+tools/build-content.py  writes drafts/*.plain.html (local preview) and the .docx/.xlsx to upload
+tools/new-site/new-site.py   new site generator
+docs/               ADMIN-SETUP.md (manual steps), ADD-A-TEMPLATE.md, sidekick.json
+```
 
-**Shared disclosure fragment.** The disclosure lives in one document, `fragments/disclosure`.
-Each page only contains a link to it, and the boilerplate's fragment auto-blocking pulls it in.
-In production, Compliance would own that one document: change the wording once, publish it, and
-every advisor site shows the new text, with no edits to individual advisor pages.
-
-### Quality checks (local, mobile Lighthouse, Nov 24, 2026)
-
-| Page | Performance | Accessibility | Best Practices | SEO |
-|---|---|---|---|---|
-| `/` | 100 | 100 | 96* | 100 |
-| `/advisors/jordan-lee` | 100 | 100 | 96* | 100 |
-
-\*The only Best Practices miss is "missing doctype", which comes from the local `aem up` dev
-server's draft rendering; pages served from aem.page / aem.live include `<!DOCTYPE html>`.
-
-`npm run lint` passes (ESLint airbnb-base + Stylelint from the boilerplate).
+`drafts/`, `docs/`, `tools/*.py` and `tools/new-site/` are listed in `.hlxignore`, so they are
+never served. `tools/sidekick/` and `tools/compliance/` **are** served, because Sidekick needs them.
 
 ## Run it locally
 
-Requires Node 18+ (tested on Node 24).
-
 ```sh
 npm install
-npm start          # = npx -y @adobe/aem-cli up --html-folder drafts --html-mount / --no-open
+npm start                       # http://localhost:3000/demo  (serves drafts/ as the content)
+npm run lint
+pip install python-docx openpyxl
+python3 tools/build-content.py ../slf-eds-demo1-content   # regenerate drafts + Word/Excel files
+npm run new-site -- --firm "Prairie Sky Financial" --city "Regina, SK" --lead "Sam Rivera, CFP" --theme harbour --template advisor-team
 ```
 
-Open http://localhost:3000/ and http://localhost:3000/advisors/jordan-lee.
+## Quality (local, Lighthouse mobile, Nov 24, 2026)
 
-Until the content source is connected, the pages come from `drafts/` (EDS-style `.plain.html`
-markup generated from `tools/content.py`). `drafts/` and `tools/` are in `.hlxignore`, so they
-are never served from aem.page / aem.live.
+Performance 97 to 100 and Accessibility 100 on every page tested (`/`, `/harbourview/`, `/northstar/`,
+`/campaigns/retirement-checkup`, `/demo`, `/compliance`, `/new-site`, `/templates`,
+`/approved-content`, `/advisors/jordan-lee`; `/layouts` scores 97 because of a small font-swap shift).
+Best Practices is 96 locally ("missing doctype" comes from the dev server's draft rendering).
+SEO is lower locally only because the dev server proxies the preview host's `robots.txt`, which
+blocks crawling on every `*.aem.page` site. `npm run lint` passes.
 
-To regenerate the drafts and the Word documents after changing `tools/content.py`:
+## Limitations (honest list)
 
-```sh
-pip install python-docx
-python3 tools/build-content.py ../slf-eds-demo1-content   # writes drafts/*.plain.html and the .docx files
-```
+- **Site creation needs an admin.** The intake form doesn't create anything. It produces the request
+  and the generator command. Creating a repoless site is one Admin API call that needs an AEM admin
+  token (or Site Admin at tools.aem.live).
+- **Demo approvals are kept in the browser.** Approve and Request changes on `/compliance` are saved in
+  `localStorage` so the flow can be clicked through safely. The authoritative state is the
+  `compliance-queue` sheet (owned by Compliance) and, in production, Snapshots and Reviews, where
+  Approve actually publishes. The review dialog doesn't send email; it offers a pre-filled `mailto:` link.
+- **Publish restriction is described, not switched on.** Enabling roles forces sign-in for everyone, so
+  it isn't applied to the demo site (see docs/ADMIN-SETUP.md, step 4).
+- **Approved content is per site.** Fragments load from the same site. A repoless sister site needs
+  its own `/fragments/` copy, or a shared fragment source set up by the platform team.
+- **Sidekick buttons need the configuration POST** in docs/ADMIN-SETUP.md, step 3 (a repo file can't do
+  it on a configuration-service site). Until then, use the status bar and the `/compliance` page, which
+  work without Sidekick changes.
 
-(The Word files embed PNG avatars from `<docx_out_dir>/_avatars/<slug>.png`.)
-
-## Make it live on aem.live: exact next steps
-
-> Note: `fstab.yaml` is **retired** in the current boilerplate. The content source is now set in
-> the site configuration (during AEM Code Sync setup, or later at https://tools.aem.live or
-> https://labs.aem.live/tools/site-admin/index.html), so this repo intentionally has no `fstab.yaml`.
-
-1. **Install AEM Code Sync on this repo.**
-   Go to https://github.com/apps/aem-code-sync/installations/new, choose the
-   `michaelpereira78` account, select **Only select repositories** → `slf-eds-demo1`, and click
-   **Install / Save**. On the setup screen that follows, keep yourself as site admin and click
-   **Finish setup**. (By default the site points to Document Authoring at https://da.live; step 3
-   switches it to SharePoint or Google Drive.)
-2. **Create the content folder** (pick one):
-   - **Google Drive (fastest for a demo):** create a folder, e.g. `slf-eds-demo1`, and share it
-     as **Editor** with `helix@adobe.com`
-     ([docs](https://www.aem.live/developer/setup-google-drive)).
-   - **SharePoint:** create a website root folder in a SharePoint site, e.g.
-     `https://<tenant>.sharepoint.com/sites/<site>/Shared%20Documents/slf-eds-demo1`. Using a
-     corporate tenant needs your SharePoint/Entra admin to register the AEM application and grant
-     `Sites.Selected` on that site ([docs](https://www.aem.live/docs/setup-customer-sharepoint)).
-3. **Point the site at the folder.** Open https://labs.aem.live/tools/site-admin/index.html
-   (or https://tools.aem.live), sign in, open org `michaelpereira78` / site `slf-eds-demo1`, set
-   **Content source** to the folder URL (Drive folder URL, or the canonical SharePoint URL above)
-   and **Save**.
-4. **Upload the documents** from `slf-eds-demo1-content/` keeping this structure
-   (do not upload `_avatars/`):
-
-   ```
-   index.docx
-   nav.docx
-   footer.docx
-   advisors/jordan-lee.docx
-   fragments/disclosure.docx
-   ```
-
-   In Google Drive, convert each `.docx` to a native Google Doc
-   (open it → **File → Save as Google Docs**) and remove the `.docx` copies; Google Drive content
-   must be Google Docs. In SharePoint, upload the `.docx` files as they are.
-5. **Install AEM Sidekick** from the Chrome Web Store
-   (https://chromewebstore.google.com/detail/aem-sidekick/igkmdomcgoebiipaifhmpfjhbjccggml)
-   and pin it.
-6. **Preview and Publish each document once**: open the document, click the Sidekick icon →
-   **Preview**, then on the preview page → **Publish**. Do `nav`, `footer` and
-   `fragments/disclosure` too: they are separate documents with their own preview/publish.
-7. Check https://main--slf-eds-demo1--michaelpereira78.aem.page/ (preview) and
-   https://main--slf-eds-demo1--michaelpereira78.aem.live/ (live) on desktop and on a phone.
-
-Code changes ship by pushing to `main` (Code Sync deploys them in seconds); content ships
-separately through Sidekick.
-
-## Presenting it
-
-See [DEMO-SCRIPT.md](DEMO-SCRIPT.md) for a two-minute click-by-click script.
-
-## Built on
-
-[adobe/aem-boilerplate](https://github.com/adobe/aem-boilerplate) (Apache-2.0). See the
-[developer tutorial](https://www.aem.live/developer/tutorial) and
-[block collection](https://www.aem.live/developer/block-collection).
+Built on [adobe/aem-boilerplate](https://github.com/adobe/aem-boilerplate) (Apache-2.0).

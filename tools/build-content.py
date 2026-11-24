@@ -16,7 +16,7 @@ from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
 
 sys.path.insert(0, os.path.dirname(__file__))
-from content import PAGES  # noqa: E402
+from content import PAGES, SHEETS, PREVIEW_ORIGIN  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DRAFTS = os.path.join(ROOT, 'drafts')
@@ -41,6 +41,10 @@ def runs_html(runs):
         if isinstance(r, str):
             out.append(html.escape(r))
             continue
+        if len(r) == 2:
+            tag = {'b': 'strong', 'i': 'em'}[r[0]]
+            out.append(f'<{tag}>{html.escape(r[1])}</{tag}>')
+            continue
         kind, text, href = r
         a = f'<a href="{html.escape(href)}">{html.escape(text)}</a>'
         if kind == 'b-a':
@@ -57,8 +61,8 @@ def item_html(item):
         return f'<p>{runs_html(item[1])}</p>'
     if kind in ('h1', 'h2', 'h3'):
         return f'<{kind} id="{slugify(item[1])}">{html.escape(item[1])}</{kind}>'
-    if kind == 'ul':
-        return '<ul>' + ''.join(f'<li>{runs_html(li)}</li>' for li in item[1]) + '</ul>'
+    if kind in ('ul', 'ol'):
+        return f'<{kind}>' + ''.join(f'<li>{runs_html(li)}</li>' for li in item[1]) + f'</{kind}>'
     if kind == 'img':
         _, slug, alt = item
         return (f'<picture><img src="/images/avatars/{slug}.svg" alt="{html.escape(alt)}" '
@@ -122,7 +126,7 @@ def add_hyperlink(paragraph, text, url, bold=False, italic=False):
 
 def abs_url(href):
     if href.startswith('/'):
-        return 'https://main--slf-eds-demo1--michaelpereira78.aem.page' + href
+        return PREVIEW_ORIGIN + href
     return href
 
 
@@ -130,6 +134,10 @@ def add_runs(par, runs):
     for r in runs:
         if isinstance(r, str):
             par.add_run(r)
+        elif len(r) == 2:
+            run = par.add_run(r[1])
+            run.bold = r[0] == 'b'
+            run.italic = r[0] == 'i'
         else:
             kind, text, href = r
             add_hyperlink(par, text, abs_url(href), bold=kind == 'b-a', italic=kind == 'i-a')
@@ -151,10 +159,10 @@ def add_item(container, item, state):
         p = first_par(container, state)
         p.style = f'Heading {kind[1]}'
         p.add_run(item[1])
-    elif kind == 'ul':
+    elif kind in ('ul', 'ol'):
         for li in item[1]:
             p = first_par(container, state)
-            p.style = 'List Bullet'
+            p.style = 'List Bullet' if kind == 'ul' else 'List Number'
             add_runs(p, li)
     elif kind == 'img':
         _, slug, alt = item
@@ -214,7 +222,32 @@ def page_docx(page, path):
     doc.save(path)
 
 
+def sheet_xlsx(sheets, path):
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill
+    wb = Workbook()
+    wb.remove(wb.active)
+    for title, rows in sheets.items():
+        ws = wb.create_sheet(title)
+        header = list(rows[0].keys())
+        ws.append(header)
+        for r in rows:
+            ws.append([r.get(h, '') for h in header])
+        for c in ws[1]:
+            c.font = Font(bold=True)
+            c.fill = PatternFill('solid', fgColor='F9A66C')
+        for col in ws.columns:
+            width = max(len(str(c.value or '')) for c in col)
+            ws.column_dimensions[col[0].column_letter].width = min(max(12, width + 2), 70)
+    wb.save(path)
+
+
 def main():
+    for name, sheets in SHEETS.items():
+        xp = os.path.join(DOCX_OUT, f'{name}.xlsx')
+        os.makedirs(os.path.dirname(xp), exist_ok=True)
+        sheet_xlsx(sheets, xp)
+        print('wrote', xp)
     for name, page in PAGES.items():
         hp = os.path.join(DRAFTS, f'{name}.plain.html')
         os.makedirs(os.path.dirname(hp), exist_ok=True)
