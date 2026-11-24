@@ -5,33 +5,119 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 300px;
+  overflow: hidden;
+  background-color: var(--navy-color);
+  color: #fff;
+}
+
+/* gold accent band */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 8px;
+  background-color: var(--accent-color);
+}
+
+.hero > div {
+  box-sizing: border-box;
+  max-width: 1264px;
+  margin: 0 auto;
+  padding: 48px 24px 56px;
+  display: grid;
+  gap: 32px;
+  align-items: center;
+}
+
+.hero .hero-content > :first-child {
+  margin-top: 0;
+}
+
+.hero .hero-eyebrow {
+  display: inline-block;
+  margin: 0 0 12px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background-color: rgb(255 203 5 / 16%);
+  color: var(--accent-color);
+  font-size: var(--body-font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .hero h1 {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  color: var(--background-color);
+  margin: 0 0 16px;
+  max-width: 18ch;
+  color: #fff;
 }
 
-.hero picture {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  object-fit: cover;
-  box-sizing: border-box;
+.hero .hero-content p {
+  max-width: 62ch;
+  color: rgb(255 255 255 / 90%);
 }
 
-.hero img {
-  object-fit: cover;
+.hero .hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  margin-top: 28px;
+}
+
+.hero .hero-actions p.button-wrapper {
+  margin: 0;
+}
+
+.hero a.button.secondary {
+  border-color: #fff;
+  color: #fff;
+}
+
+.hero a.button.secondary:hover,
+.hero a.button.secondary:focus-visible {
+  background-color: #fff;
+  color: var(--navy-color);
+}
+
+.hero a:focus-visible {
+  outline-color: var(--accent-color);
+}
+
+/* profile variant */
+.hero .hero-media picture {
+  display: block;
+  width: min(220px, 60vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 6px solid var(--accent-color);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 25%);
+}
+
+.hero .hero-media img {
+  display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+}
+
+@media (width >= 600px) {
+  .hero > div {
+    padding: 64px 32px 72px;
+  }
+
+  .hero.hero-has-media > div {
+    grid-template-columns: auto 1fr;
+    gap: 48px;
+  }
 }
 
 @media (width >= 900px) {
-  .hero {
-    padding: 40px 32px;
+  .hero > div {
+    padding: 88px 32px 96px;
+  }
+
+  .hero .hero-media picture {
+    width: 280px;
   }
 }

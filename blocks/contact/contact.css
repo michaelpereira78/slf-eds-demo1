@@ -1,0 +1,89 @@
+.contact {
+  margin-top: 24px;
+  padding: 24px;
+  border: 1px solid var(--border-color);
+  border-top: 6px solid var(--accent-color);
+  border-radius: var(--radius);
+  background-color: var(--background-color);
+  box-shadow: var(--card-shadow);
+}
+
+.contact dl {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin: 0;
+}
+
+.contact dt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--dark-color);
+  font-size: var(--body-font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.contact dt svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  padding: 6px;
+  border-radius: 50%;
+  background-color: rgb(255 203 5 / 25%);
+  fill: var(--navy-color);
+}
+
+.contact dd {
+  margin: 6px 0 0 40px;
+  color: var(--text-color);
+  font-size: var(--body-font-size-s);
+}
+
+.contact dd p {
+  margin: 0;
+}
+
+.contact dd a:any-link {
+  font-weight: 700;
+}
+
+.contact .contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+@media (width >= 600px) {
+  .contact:not(.card) dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 32px;
+  }
+}
+
+@media (width >= 900px) {
+  .contact:not(.card) {
+    padding: 32px 40px;
+  }
+
+  .contact:not(.card) dl {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* (Card) variant: compact sidebar card */
+.contact.card {
+  padding: 24px;
+}
+
+.contact .contact-heading {
+  margin: 0 0 16px;
+  font-size: var(--heading-font-size-xs);
+}
+
+.contact.card .contact-actions .button {
+  width: 100%;
+}

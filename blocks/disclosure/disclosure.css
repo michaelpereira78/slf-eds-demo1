@@ -1,0 +1,29 @@
+.disclosure {
+  position: relative;
+  margin: 8px 0;
+  padding: 24px 24px 24px 28px;
+  border: 1px solid var(--border-color);
+  border-left: 6px solid var(--accent-color);
+  border-radius: var(--radius);
+  background-color: var(--light-color);
+  color: var(--dark-color);
+  font-size: var(--body-font-size-xs);
+  line-height: 1.6;
+}
+
+.disclosure h2 {
+  margin: 0 0 8px;
+  color: var(--navy-color);
+  font-size: var(--heading-font-size-xs);
+}
+
+.disclosure p {
+  margin: 8px 0 0;
+  max-width: 90ch;
+}
+
+@media (width >= 900px) {
+  .disclosure {
+    padding: 28px 32px 28px 36px;
+  }
+}

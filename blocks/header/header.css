@@ -1,5 +1,6 @@
 /* header and nav layout */
 header .nav-wrapper {
+  border-bottom: 1px solid var(--border-color);
   background-color: var(--background-color);
   width: 100%;
   z-index: 2;
@@ -24,8 +25,8 @@ header nav {
 header nav[aria-expanded='true'] {
   grid-template:
     'hamburger brand' var(--nav-height)
-    'sections sections' 1fr
-    'tools tools' var(--nav-height) / auto 1fr;
+    'sections sections' auto
+    'tools tools' 1fr / auto 1fr;
   overflow-y: auto;
   min-height: 100dvh;
 }
@@ -56,13 +57,17 @@ header nav a:any-link {
 /* hamburger */
 header nav .nav-hamburger {
   grid-area: hamburger;
-  height: 22px;
+  height: 44px;
   display: flex;
   align-items: center;
 }
 
 header nav .nav-hamburger button {
-  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
   margin: 0;
   border: 0;
   border-radius: 0;
@@ -270,4 +275,76 @@ header nav .nav-sections .nav-drop > button[aria-expanded='false'] + ul {
 /* tools */
 header nav .nav-tools {
   grid-area: tools;
+}
+
+/* ---- Advisor Demo theme ---- */
+header nav .nav-brand a:any-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--navy-color);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* simple text wordmark with a gold mark (no third-party logos) */
+header nav .nav-brand a:any-link::before {
+  content: '';
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background-color: var(--accent-color);
+  box-shadow: inset -8px -8px 0 rgb(0 57 70 / 18%);
+}
+
+header nav .nav-sections a:any-link {
+  display: inline-block;
+  padding: 8px 0;
+  color: var(--navy-color);
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+}
+
+header nav .nav-sections a:hover,
+header nav .nav-sections a[aria-current='page'] {
+  border-bottom-color: var(--accent-color);
+}
+
+header nav .nav-tools p.button-wrapper {
+  margin: 0;
+}
+
+header nav .nav-tools a.button {
+  padding: 0.45em 1.1em;
+  font-size: var(--body-font-size-xs);
+}
+
+header nav[aria-expanded='true'] .nav-sections li {
+  font-size: var(--body-font-size-m);
+  border-bottom: 1px solid var(--border-color);
+}
+
+header nav[aria-expanded='true'] .nav-tools {
+  align-self: start;
+  padding-top: 16px;
+}
+
+@media (width < 900px) {
+  header nav .nav-tools {
+    display: none;
+  }
+
+  header nav[aria-expanded='true'] .nav-tools {
+    display: block;
+  }
+}
+
+@media (width >= 900px) {
+  header nav .nav-sections ul {
+    gap: 32px;
+  }
 }

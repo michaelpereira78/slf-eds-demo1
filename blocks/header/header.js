@@ -117,6 +117,11 @@ export default async function decorate(block) {
 
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
+    // mark the link for the current page (ignoring in-page anchors)
+    navSections.querySelectorAll('a[href]').forEach((a) => {
+      const url = new URL(a.href, window.location);
+      if (!url.hash && url.pathname === window.location.pathname) a.setAttribute('aria-current', 'page');
+    });
     navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
       const subList = navSection.querySelector(':scope > ul');
       if (!subList) return;
@@ -147,6 +152,12 @@ export default async function decorate(block) {
       <span class="nav-hamburger-icon"></span>
     </button>`;
   hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
+  // close the mobile menu after choosing a link (needed for in-page #anchors)
+  nav.addEventListener('click', (e) => {
+    if (!isDesktop.matches && e.target.closest('.nav-sections a, .nav-tools a')) {
+      toggleMenu(nav, navSections, false);
+    }
+  });
   nav.prepend(hamburger);
   nav.setAttribute('aria-expanded', 'false');
   // prevent mobile nav behavior on window resize
