@@ -11,6 +11,9 @@ Docs (or Word) and runs on one shared codebase.
 **Start here:** https://main--slf-eds-demo1--michaelpereira78.aem.page/demo (after the content
 upload in [docs/ADMIN-SETUP.md](docs/ADMIN-SETUP.md)).
 **Presenter script:** [DEMO-SCRIPT.md](DEMO-SCRIPT.md), a 12-minute walkthrough of all seven capabilities.
+**Developer handoff:** [docs/TECHNICAL-HANDOFF.md](docs/TECHNICAL-HANDOFF.md), the technical reference for developers taking
+over the platform (architecture diagrams, repository map, content model, templates, theming, compliance
+workflow, new-site generation, configuration, security, known issues and backlog).
 
 ## The seven capabilities and how each is built
 
@@ -52,7 +55,8 @@ tools/compliance/demo-queue.json   fallback queue data
 tools/content.py    single source of truth for all demo content
 tools/build-content.py  writes drafts/*.plain.html (local preview) and the .docx/.xlsx to upload
 tools/new-site/new-site.py   new site generator
-docs/               ADMIN-SETUP.md (manual steps), ADD-A-TEMPLATE.md, sidekick.json
+docs/               TECHNICAL-HANDOFF.md (developer handoff), ADMIN-SETUP.md (manual steps),
+                    ADD-A-TEMPLATE.md, sidekick.json
 ```
 
 `drafts/`, `docs/`, `tools/*.py` and `tools/new-site/` are listed in `.hlxignore`, so they are
