@@ -1,24 +1,21 @@
 {
-  "name": "@adobe/aem-boilerplate",
+  "name": "slf-eds-demo1",
   "private": true,
   "version": "1.3.0",
-  "description": "Starter project for Adobe Helix",
+  "description": "Edge Delivery Services demo: a fictional advisor team site (Maple Ridge Wealth Partners)",
   "scripts": {
     "lint:js": "eslint .",
     "lint:css": "stylelint \"blocks/**/*.css\" \"styles/*.css\"",
     "lint": "npm run lint:js && npm run lint:css",
-    "lint:fix": "npm run lint:js -- --fix && npm run lint:css -- --fix"
+    "lint:fix": "npm run lint:js -- --fix && npm run lint:css -- --fix",
+    "start": "npx -y @adobe/aem-cli up --html-folder drafts --html-mount / --no-open",
+    "build:content": "python3 tools/build-content.py"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/adobe/aem-boilerplate.git"
+    "url": "git+https://github.com/michaelpereira78/slf-eds-demo1.git"
   },
-  "author": "Adobe",
   "license": "Apache License 2.0",
-  "bugs": {
-    "url": "https://github.com/adobe/aem-boilerplate/issues"
-  },
-  "homepage": "https://github.com/adobe/aem-boilerplate#readme",
   "devDependencies": {
     "@babel/eslint-parser": "7.29.13",
     "eslint": "8.57.1",
