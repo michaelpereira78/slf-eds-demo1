@@ -10,7 +10,7 @@
   color: #fff;
 }
 
-/* gold accent band */
+/* coral accent band */
 .hero::after {
   content: '';
   position: absolute;
@@ -38,7 +38,7 @@
   margin: 0 0 12px;
   padding: 4px 12px;
   border-radius: 999px;
-  background-color: rgb(255 203 5 / 16%);
+  background-color: rgb(249 166 108 / 16%);
   color: var(--accent-color);
   font-size: var(--body-font-size-xs);
   font-weight: 700;

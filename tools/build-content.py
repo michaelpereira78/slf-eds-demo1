@@ -177,7 +177,7 @@ def add_item(container, item, state):
         hr.bold = True
         shade = OxmlElement('w:shd')
         shade.set(qn('w:val'), 'clear')
-        shade.set(qn('w:fill'), 'FFCB05')
+        shade.set(qn('w:fill'), 'F9A66C')
         hdr._tc.get_or_add_tcPr().append(shade)
         for ri, row in enumerate(rows):
             for ci, cell in enumerate(row):

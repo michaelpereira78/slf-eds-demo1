@@ -7,7 +7,7 @@ click **Preview** and **Publish** in AEM Sidekick, and the page updates in secon
 > **Demo only. Not affiliated with Sun Life.** "Maple Ridge Wealth Partners" and every person,
 > photo, phone number (555 numbers) and email address (`@example.com`) on this site are fictional.
 > The avatars are generated initials placeholders, not photos of real people. No Sun Life logos
-> or trademarks are used; the colours are only *inspired by* a warm gold and navy palette.
+> or trademarks are used; the colours are only *a neutral forest-green and coral palette, deliberately unlike any real brand.
 
 | | URL |
 |---|---|
@@ -28,7 +28,7 @@ Two pages, modelled on the structure of a typical advisor team page:
 
 | Block | How authors write it in Word | What it renders |
 |---|---|---|
-| `hero` | One cell: short eyebrow line, Heading 1, intro paragraph, **bold link** (primary button), *italic link* (secondary button). `Hero (Profile)` adds an image cell on the left. | Navy hero band with gold accent and buttons; profile variant shows a round portrait. |
+| `hero` | One cell: short eyebrow line, Heading 1, intro paragraph, **bold link** (primary button), *italic link* (secondary button). `Hero (Profile)` adds an image cell on the left. | Forest-green hero band with coral accent and buttons; profile variant shows a round portrait. |
 | `team-cards` | One table row per person: image \| name, credentials \| title \| bio \| email \| phone. Making the name a link adds a "View profile" link. | Card grid: 1 column on mobile, 2 on tablet, 3 on desktop. Email and phone become `mailto:`/`tel:` links. Cells are detected defensively, so a missing phone or email does not break anything. |
 | `contact` | Two-column rows: label \| value (Office, Main line, Email, Hours, Directions). `Contact (Card)` is the compact sidebar version. | Icon list with tap-to-call / tap-to-email links and a "Get directions" button. |
 | `disclosure` | One cell: heading + text. | Styled regulatory note (`role="note"`). |

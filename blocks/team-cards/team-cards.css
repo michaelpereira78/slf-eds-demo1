@@ -20,7 +20,7 @@
 
 .team-cards .team-cards-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 2px 4px rgb(0 57 70 / 10%), 0 16px 32px rgb(0 57 70 / 12%);
+  box-shadow: 0 2px 4px rgb(30 77 59 / 10%), 0 16px 32px rgb(30 77 59 / 12%);
 }
 
 .team-cards .team-cards-image {

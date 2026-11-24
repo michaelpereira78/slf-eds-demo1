@@ -13,17 +13,17 @@
 :root {
   /* colors: Sun Life-inspired palette (demo only, not official brand values) */
   --background-color: #fff;
-  --light-color: #f6f4ef;
-  --dark-color: #4a5560;
-  --text-color: #1d2a33;
-  --link-color: #005b74;
-  --link-hover-color: #003946;
-  --accent-color: #ffcb05;
-  --accent-hover-color: #f2b800;
-  --navy-color: #003946;
-  --border-color: #e3ded3;
-  --focus-color: #005b74;
-  --card-shadow: 0 1px 2px rgb(0 57 70 / 8%), 0 8px 24px rgb(0 57 70 / 8%);
+  --light-color: #f3f6f4;
+  --dark-color: #4b5a54;
+  --text-color: #1c2622;
+  --link-color: #2a6b55;
+  --link-hover-color: #1e4d3b;
+  --accent-color: #f9a66c;
+  --accent-hover-color: #f48c47;
+  --navy-color: #1e4d3b;
+  --border-color: #d9e2dc;
+  --focus-color: #2a6b55;
+  --card-shadow: 0 1px 2px rgb(30 77 59 / 8%), 0 8px 24px rgb(30 77 59 / 8%);
   --radius: 12px;
 
   /* fonts */
