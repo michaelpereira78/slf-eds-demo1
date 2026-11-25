@@ -41,6 +41,9 @@ def runs_html(runs):
         if isinstance(r, str):
             out.append(html.escape(r))
             continue
+        if len(r) == 2 and r[0] == 'icon':
+            out.append(f'<span class="icon icon-{r[1]}"></span>')
+            continue
         if len(r) == 2:
             tag = {'b': 'strong', 'i': 'em'}[r[0]]
             out.append(f'<{tag}>{html.escape(r[1])}</{tag}>')
@@ -67,6 +70,10 @@ def item_html(item):
         _, slug, alt = item
         return (f'<picture><img src="/images/avatars/{slug}.svg" alt="{html.escape(alt)}" '
                 f'width="480" height="480" loading="lazy"></picture>')
+    if kind == 'photo':
+        _, name, alt = item
+        return (f'<picture><img src="/images/photos/{name}.jpg" alt="{html.escape(alt)}" '
+                f'loading="lazy"></picture>')
     if kind == 'block':
         _, name, rows = item
         body = ''.join('<div>' + ''.join('<div>' + ''.join(item_html(i) for i in cell) + '</div>' for cell in row) + '</div>' for row in rows)
@@ -134,6 +141,8 @@ def add_runs(par, runs):
     for r in runs:
         if isinstance(r, str):
             par.add_run(r)
+        elif len(r) == 2 and r[0] == 'icon':
+            par.add_run(f':{r[1]}:')
         elif len(r) == 2:
             run = par.add_run(r[1])
             run.bold = r[0] == 'b'
@@ -172,6 +181,17 @@ def add_item(container, item, state):
         shape = run.add_picture(png, width=Inches(state.get('img_width', 1.1)))
         shape._inline.docPr.set('descr', alt)
         shape._inline.docPr.set('title', alt)
+    elif kind == 'photo':
+        _, name, alt = item
+        p = first_par(container, state)
+        jpg = os.path.join(ROOT, 'images', 'photos', f'{name}.jpg')
+        run = p.add_run()
+        width = state.get('img_width', 1.1) if not name.startswith(('hero-', 'retirement-', 'advisor-', 'couple-')) else 6.0
+        if state.get('in_cell') and width == 6.0:
+            width = 3.2
+        shape = run.add_picture(jpg, width=Inches(width))
+        shape._inline.docPr.set('descr', alt)
+        shape._inline.docPr.set('title', alt)
     elif kind == 'block':
         _, name, rows = item
         ncols = max(len(r) for r in rows)
@@ -190,7 +210,8 @@ def add_item(container, item, state):
         for ri, row in enumerate(rows):
             for ci, cell in enumerate(row):
                 c = table.rows[ri + 1].cells[ci]
-                cstate = {'fresh': True, 'img_width': 0.7 if 'Team' in name else 1.4}
+                cstate = {'fresh': True, 'img_width': 0.7 if 'Team' in name or 'Testimonials' in name else 1.4,
+                          'in_cell': ncols > 1}
                 for i in cell:
                     add_item(c, i, cstate)
         if name == 'Team Cards':
@@ -229,10 +250,15 @@ def sheet_xlsx(sheets, path):
     wb.remove(wb.active)
     for title, rows in sheets.items():
         ws = wb.create_sheet(title)
-        header = list(rows[0].keys())
-        ws.append(header)
-        for r in rows:
-            ws.append([r.get(h, '') for h in header])
+        if rows and isinstance(rows[0], str):
+            # header row only (e.g. the `incoming` tab of a form sheet)
+            ws.append(rows)
+            ws.freeze_panes = 'A2'
+        else:
+            header = list(rows[0].keys())
+            ws.append(header)
+            for r in rows:
+                ws.append([r.get(h, '') for h in header])
         for c in ws[1]:
             c.font = Font(bold=True)
             c.fill = PatternFill('solid', fgColor='F9A66C')

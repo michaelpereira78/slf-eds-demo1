@@ -147,5 +147,16 @@ export default function decorate(block) {
     result.focus();
   });
 
+  // deep links from the supervisor console: /new-site?template=solo-advisor&theme=slate
+  const params = new URLSearchParams(window.location.search);
+  ['template', 'theme'].forEach((name) => {
+    const value = params.get(name);
+    const input = value && form.querySelector(`input[name="${name}"][value="${CSS.escape(value)}"]`);
+    if (input) {
+      input.checked = true;
+      if (name === 'theme') applyTheme(value);
+    }
+  });
+
   block.replaceChildren(form, result);
 }

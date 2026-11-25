@@ -1,6 +1,7 @@
 import {
   STATUS, statusKey, getQueue, saveDecision, resetDemo, siteInfo, normalizePath,
 } from '../../scripts/compliance-data.js';
+import { logAudit } from '../../scripts/forms.js';
 
 const SNAPSHOT_ADMIN = 'https://tools.aem.live/tools/snapshot-admin/index.html';
 const FILTERS = [['all', 'All'], ['pending', 'Pending review'], ['changes', 'Changes requested'], ['approved', 'Approved']];
@@ -22,11 +23,25 @@ function fmt(date) {
   });
 }
 
-/** Real preview/publish times from the AEM Admin API (best effort, read-only). */
+let statusDenied = false;
+
+/**
+ * Real preview/publish times from the AEM Admin API (best effort, read-only).
+ * Once roles are configured the Admin API needs a signed-in user, so we only ask
+ * when the Sidekick is on the page (or ?status=live) and stop after the first 401/403.
+ */
+function canReadStatus() {
+  if (statusDenied) return false;
+  const params = new URLSearchParams(window.location.search);
+  return params.get('status') === 'live' || !!document.querySelector('aem-sidekick, helix-sidekick');
+}
+
 async function addLiveStatus(item, path) {
+  if (!canReadStatus()) return;
   const { org, site, ref } = siteInfo();
   try {
-    const resp = await fetch(`https://admin.hlx.page/status/${org}/${site}/${ref}${normalizePath(path)}`);
+    const resp = await fetch(`https://admin.hlx.page/status/${org}/${site}/${ref}${normalizePath(path)}`, { credentials: 'include' });
+    if (resp.status === 401 || resp.status === 403) statusDenied = true;
     if (!resp.ok) return;
     const json = await resp.json();
     const parts = [];
@@ -39,7 +54,22 @@ async function addLiveStatus(item, path) {
   }
 }
 
-function renderItem(row, rerender) {
+function audit(row, event, notes) {
+  logAudit({
+    event,
+    advisor: row['Submitted By'] || '',
+    site: row.Site || '',
+    pagePath: normalizePath(row.Page),
+    changeSummary: row.Notes || '',
+    submittedBy: row['Submitted By'] || '',
+    status: event,
+    reviewer: 'R. Castillo (supervisor)',
+    decisionDate: new Date().toISOString().slice(0, 10),
+    notes,
+  });
+}
+
+function renderItem(row, rerender, readOnly) {
   const key = statusKey(row.Status);
   const s = STATUS[key];
   const path = row.Page;
@@ -69,7 +99,12 @@ function renderItem(row, rerender) {
     { class: 'cq-actions' },
     el('a', { class: 'button secondary', href: path, text: 'Open preview' }),
   );
-  if (key === 'pending') {
+  if (readOnly) {
+    if (key === 'changes') actions.append(el('span', { class: 'cq-ready cq-todo', text: 'Edit the page, Preview, then resubmit' }));
+    if (key === 'approved') actions.append(el('span', { class: 'cq-ready', text: 'Approved: your supervisor publishes it' }));
+    if (key === 'pending') actions.append(el('span', { class: 'cq-ready cq-wait', text: 'With Compliance' }));
+    item.append(...[head, title, meta, notes, live, actions].filter(Boolean));
+  } else if (key === 'pending') {
     const approve = el('button', { type: 'button', class: 'button primary', text: 'Approve' });
     const changes = el('button', { type: 'button', class: 'button secondary', text: 'Request changes' });
     const reasonWrap = el(
@@ -81,7 +116,8 @@ function renderItem(row, rerender) {
     );
     approve.addEventListener('click', () => {
       saveDecision(path, { Status: 'Approved', Reviewer: 'R. Castillo (you)', Notes: 'Approved in the demo.' });
-      rerender(`Approved "${row.Title}". In production this publishes the locked review version.`);
+      audit(row, 'Approved', 'Approved as submitted.');
+      rerender(`Approved "${row.Title}" and logged it in the audit sheet. Next: open the preview and click Publish in Sidekick.`);
     });
     changes.addEventListener('click', () => {
       reasonWrap.hidden = false;
@@ -90,12 +126,13 @@ function renderItem(row, rerender) {
     reasonWrap.querySelector('button').addEventListener('click', () => {
       const note = reasonWrap.querySelector('textarea').value.trim() || 'Please revise and resubmit.';
       saveDecision(path, { Status: 'Changes requested', Reviewer: 'R. Castillo (you)', Notes: note });
-      rerender(`Sent "${row.Title}" back to ${row['Submitted By'] || 'the advisor'}.`);
+      audit(row, 'Changes requested', note);
+      rerender(`Sent "${row.Title}" back to ${row['Submitted By'] || 'the advisor'} and logged it in the audit sheet.`);
     });
     actions.append(approve, changes);
     item.append(...[head, title, meta, notes, live, actions, reasonWrap].filter(Boolean));
   } else {
-    if (key === 'approved') actions.append(el('span', { class: 'cq-ready', text: 'Ready to publish' }));
+    if (key === 'approved') actions.append(el('span', { class: 'cq-ready', text: 'Ready to publish (Sidekick > Publish)' }));
     item.append(...[head, title, meta, notes, live, actions].filter(Boolean));
   }
   addLiveStatus(item, path);
@@ -103,7 +140,11 @@ function renderItem(row, rerender) {
 }
 
 export default async function decorate(block) {
+  // (Mine) variant: the advisor's read-only view of their own submissions
+  const readOnly = block.classList.contains('mine');
   block.textContent = '';
+  let who = '';
+  const picker = readOnly ? el('select', { class: 'cq-who', id: 'cq-who', 'aria-label': 'Show submissions for' }) : null;
   const status = el('p', { class: 'cq-toast', role: 'status' });
   const summary = el('div', { class: 'cq-summary' });
   const filters = el('div', { class: 'cq-filters', role: 'group', 'aria-label': 'Filter by status' });
@@ -113,7 +154,17 @@ export default async function decorate(block) {
   let filter = 'all';
 
   const render = async (message) => {
-    const { rows, source } = await getQueue();
+    const { rows: allRows, source } = await getQueue();
+    if (picker) {
+      const names = [...new Set(allRows.map((r) => r['Submitted By']).filter(Boolean))];
+      if (!who) [who] = names;
+      picker.replaceChildren(...names.map((n) => {
+        const o = el('option', { value: n, text: n });
+        if (n === who) o.selected = true;
+        return o;
+      }));
+    }
+    const rows = readOnly ? allRows.filter((r) => r['Submitted By'] === who) : allRows;
     const counts = { pending: 0, changes: 0, approved: 0 };
     rows.forEach((r) => { const k = statusKey(r.Status); if (k in counts) counts[k] += 1; });
     summary.replaceChildren(...Object.entries(counts).map(([k, n]) => el(
@@ -130,19 +181,27 @@ export default async function decorate(block) {
       return b;
     }));
     const visible = rows.filter((r) => filter === 'all' || statusKey(r.Status) === filter);
-    list.replaceChildren(...visible.map((r) => renderItem(r, render)));
+    list.replaceChildren(...visible.map((r) => renderItem(r, render, readOnly)));
     if (!visible.length) list.append(el('li', { class: 'cq-empty', text: 'Nothing here.' }));
-    footer.replaceChildren(
+    footer.replaceChildren(...(readOnly ? [
+      'Your supervisor reviews each submission and publishes it once Compliance approves. ',
+      'Every submission and decision is written to the compliance audit log.',
+    ] : [
       source === 'sheet' ? 'Queue source: the compliance-queue sheet in the content folder. ' : 'Queue source: built-in demo data. ',
       'Snapshots and approvals in production: ',
       el('a', { href: SNAPSHOT_ADMIN, text: 'AEM snapshot admin' }),
       '.',
-    );
+    ]));
     status.textContent = message || '';
     status.hidden = !message;
   };
 
   reset.addEventListener('click', () => { resetDemo(); filter = 'all'; render('Demo reset.'); });
-  block.append(summary, el('div', { class: 'cq-toolbar' }, filters, reset), status, list, footer);
+  if (picker) {
+    picker.addEventListener('change', () => { who = picker.value; render(); });
+    block.append(el('div', { class: 'cq-whobar' }, el('label', { for: 'cq-who', text: 'Signed in as (demo):' }), picker));
+  }
+  block.append(summary, el('div', { class: 'cq-toolbar' }, filters, readOnly ? null : reset), status, list, footer);
+  document.addEventListener('request-form:submitted', () => render());
   await render();
 }

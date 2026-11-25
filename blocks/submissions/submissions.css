@@ -1,0 +1,72 @@
+/* stylelint-disable no-descending-specificity */
+.submissions .sub-note {
+  margin: 0 0 12px;
+  color: var(--dark-color);
+  font-size: var(--body-font-size-xs);
+}
+
+.submissions .sub-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background-color: var(--background-color);
+}
+
+.submissions table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--body-font-size-xs);
+}
+
+.submissions th,
+.submissions td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.submissions th {
+  background-color: var(--light-color);
+  color: var(--navy-color);
+  font-weight: 700;
+}
+
+.submissions tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.submissions tr.sub-sample td {
+  color: var(--dark-color);
+}
+
+.submissions .sub-pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background-color: var(--light-color);
+  font-weight: 600;
+}
+
+.submissions .sub-pill-sheet,
+.submissions .sub-pill-webhook {
+  background-color: #e8f5ec;
+  color: #14532d;
+}
+
+.submissions .sub-pill-demo {
+  background-color: #fff8e6;
+  color: #6b4500;
+}
+
+.submissions .sub-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.submissions .sub-tools .button {
+  font-size: var(--body-font-size-xs);
+}

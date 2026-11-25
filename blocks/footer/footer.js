@@ -16,10 +16,15 @@ export default async function decorate(block) {
   const footer = document.createElement('div');
   while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
 
-  // name the footer sections: brand, links, legal (demo banner)
-  ['brand', 'links', 'legal'].forEach((name, i) => {
-    if (footer.children[i]) footer.children[i].classList.add(`footer-${name}`);
+  // name the footer sections: first = brand, last = legal (demo banner),
+  // anything between = link columns
+  const sections = [...footer.children];
+  sections.forEach((section, i) => {
+    if (i === 0) section.classList.add('footer-brand');
+    else if (i === sections.length - 1 && sections.length > 2) section.classList.add('footer-legal');
+    else section.classList.add('footer-links', 'footer-col');
   });
+  footer.style.setProperty('--footer-cols', Math.max(1, sections.length - 2));
 
   block.append(footer);
 }

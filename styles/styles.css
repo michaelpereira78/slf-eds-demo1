@@ -1,3 +1,5 @@
+/* stylelint-disable no-descending-specificity */
+
 /*
  * Copyright 2020 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -27,7 +29,8 @@
 
   /* fonts */
   --body-font-family: roboto, roboto-fallback, sans-serif;
-  --heading-font-family: roboto, roboto-fallback, sans-serif;
+  --heading-font-family: manrope, manrope-fallback, roboto, sans-serif;
+  --serif-font-family: fraunces, fraunces-fallback, georgia, serif;
 
   /* body sizes */
   --body-font-size-m: 22px;
@@ -54,6 +57,18 @@
 }
 
 @font-face {
+  font-family: manrope-fallback;
+  size-adjust: 103%;
+  src: local('Arial');
+}
+
+@font-face {
+  font-family: fraunces-fallback;
+  size-adjust: 104%;
+  src: local('Georgia');
+}
+
+@font-face {
   font-family: roboto-fallback;
   size-adjust: 99.529%;
   src: local('Arial');
@@ -67,8 +82,8 @@
     --body-font-size-xs: 14px;
 
     /* heading sizes */
-    --heading-font-size-xxl: 45px;
-    --heading-font-size-xl: 36px;
+    --heading-font-size-xxl: 54px;
+    --heading-font-size-xl: 38px;
     --heading-font-size-l: 28px;
     --heading-font-size-m: 22px;
     --heading-font-size-s: 20px;
@@ -97,6 +112,8 @@ body.harbour {
 }
 
 body.slate {
+  font-variant-numeric: lining-nums;
+
   --light-color: #f6f4ef;
   --dark-color: #55524b;
   --text-color: #1f2124;
@@ -107,8 +124,8 @@ body.slate {
   --navy-color: #2b2f36;
   --border-color: #e2ded3;
   --focus-color: #8a5300;
-  --heading-font-family: georgia, 'Times New Roman', serif;
-  --radius: 4px;
+  --heading-font-family: var(--serif-font-family);
+  --radius: 6px;
 }
 
 /* tokens derived from the theme colours (defined on body so themes cascade into them) */
@@ -155,10 +172,11 @@ h6 {
   margin-top: 0.8em;
   margin-bottom: 0.25em;
   font-family: var(--heading-font-family);
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+  font-weight: 750;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   color: var(--navy-color);
+  text-wrap: balance;
   scroll-margin: calc(var(--nav-height) + 16px);
 }
 
@@ -253,9 +271,9 @@ button.button {
   line-height: 1.25;
   text-decoration: none;
   cursor: pointer;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 a.button[aria-disabled="true"],
@@ -364,7 +382,20 @@ main img {
 
 /* sections */
 main > .section {
-  margin: 40px 0;
+  margin: 56px 0;
+}
+
+@media (width >= 900px) {
+  main > .section {
+    margin: 88px 0;
+  }
+}
+
+/* an intro paragraph right after a section heading reads a little larger */
+main > .section > .default-content-wrapper > h2 + p {
+  max-width: 62ch;
+  color: var(--dark-color);
+  font-size: var(--body-font-size-m);
 }
 
 main > .section > div {
@@ -388,11 +419,18 @@ main .section.light,
 main .section.highlight {
   background-color: var(--light-color);
   margin: 0;
-  padding: 40px 0;
+  padding: 56px 0;
+}
+
+@media (width >= 900px) {
+  main .section.light,
+  main .section.highlight {
+    padding: 88px 0;
+  }
 }
 
 /* no white gap between the hero band and a shaded section */
-main > .section.hero-container:has(+ .section.light) {
+main > .section.hero-container:has(+ .section.light, + .section.dark, + .section.stats-container) {
   margin-bottom: 0;
 }
 
@@ -433,7 +471,18 @@ main .section.light {
 main .section.dark,
 main .section.accent {
   margin: 0;
-  padding: 48px 0;
+  padding: 56px 0;
+}
+
+@media (width >= 900px) {
+  main .section.dark,
+  main .section.accent {
+    padding: 88px 0;
+  }
+}
+
+main .section.dark > .default-content-wrapper > h2 + p {
+  color: rgb(255 255 255 / 85%);
 }
 
 main .section.dark {
@@ -463,7 +512,8 @@ main .section.centered {
 }
 
 main .section.centered > div > p,
-main .section.centered > div > h2 {
+main .section.centered > div > h2,
+main .section.centered > .default-content-wrapper > h2 + p {
   margin-left: auto;
   margin-right: auto;
   max-width: 62ch;
@@ -495,4 +545,48 @@ main .library-metadata,
 main .page-metadata,
 main > .section.library-metadata-container {
   display: none;
+}
+
+/* serif headings (Slate) read better a touch lighter */
+body.slate :is(h1, h2, h3) {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* stats strip right under a hero gets a soft band and a divider */
+main > .section.stats-container:first-of-type,
+main > .section.hero-container + .section.stats-container {
+  margin: 0;
+  padding: 40px 0;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--light-color);
+}
+
+/* small italic notes under blocks */
+main .default-content-wrapper > p:last-child > em:only-child {
+  display: block;
+  color: var(--dark-color);
+  font-size: var(--body-font-size-xs);
+}
+
+main .section.dark .default-content-wrapper > p:last-child > em:only-child {
+  color: rgb(255 255 255 / 75%);
+}
+
+/* banner sits flush between sections */
+main > .section.banner-container {
+  margin: 0;
+}
+
+/* breathing room between a section's intro text and the block that follows */
+main > .section > .default-content-wrapper + div:not(.default-content-wrapper) {
+  margin-top: 32px;
+}
+
+main > .section > div:not(.default-content-wrapper) + .default-content-wrapper > :first-child {
+  margin-top: 20px;
+}
+
+main .default-content-wrapper > .button-wrapper + :is(h2, h3) {
+  margin-top: 48px;
 }

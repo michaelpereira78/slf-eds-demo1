@@ -182,3 +182,29 @@
   color: var(--dark-color);
   font-size: var(--body-font-size-xs);
 }
+
+/* (Mine) variant: advisor's read-only view */
+.compliance-queue .cq-whobar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.compliance-queue .cq-who {
+  padding: 8px 12px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 8px;
+  background-color: #fff;
+  font-size: var(--body-font-size-s);
+}
+
+.compliance-queue .cq-ready.cq-todo {
+  color: var(--changes);
+}
+
+.compliance-queue .cq-ready.cq-wait {
+  color: var(--pending);
+}

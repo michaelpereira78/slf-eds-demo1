@@ -51,6 +51,8 @@ export default function decorate(block) {
       }
       const text = cell.textContent.trim();
       if (!text) return;
+      // starter documents use "[photo]" as a placeholder until the advisor pastes a picture
+      if (!picture && /^\[[^\]]*photo[^\]]*\]$/i.test(text)) return;
       if (!nameText) {
         nameText = text;
         const link = cell.querySelector('a[href]');
@@ -73,9 +75,11 @@ export default function decorate(block) {
       const img = picture.querySelector('img');
       const media = document.createElement('div');
       media.className = 'team-cards-image';
+      // illustrated SVG avatars stay small and round; photos fill the top of the card
+      if (/\.svg(\?|$)/i.test(img.getAttribute('src') || '')) media.classList.add('team-cards-avatar');
       const src = img.getAttribute('src') || '';
       if (src.startsWith('./media_') || src.includes('/media_')) {
-        media.append(createOptimizedPicture(img.src, img.alt || name, false, [{ width: '400' }]));
+        media.append(createOptimizedPicture(img.src, img.alt || name, false, [{ width: '600' }]));
       } else {
         if (!img.alt) img.alt = name;
         media.append(picture);

@@ -33,9 +33,24 @@ footer .footer-brand a:any-link {
   display: inline-block;
   margin-bottom: 8px;
   color: #fff;
-  font-size: 20px;
-  font-weight: 700;
+  font-family: var(--heading-font-family);
+  font-size: 22px;
+  font-weight: 750;
   text-decoration: none;
+}
+
+footer .footer-brand p:not(:first-child) {
+  max-width: 36ch;
+  line-height: 1.6;
+}
+
+footer .footer-col strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--accent-color);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 footer .footer-links ul {
@@ -43,20 +58,24 @@ footer .footer-links ul {
   margin: 0;
   padding: 0;
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px 24px;
+  flex-direction: column;
+  gap: 2px;
 }
 
 footer .footer-links a:any-link {
   display: inline-block;
-  padding: 6px 0;
+  padding: 4px 0;
+  text-decoration: none;
+}
+
+footer .footer-links a:hover {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
 footer .footer-legal {
-  margin: 8px -24px 0;
-  padding: 16px 24px 24px;
+  margin: 8px 0 0;
+  padding: 16px 0 24px;
   border-top: 1px solid rgb(255 255 255 / 16%);
 }
 
@@ -73,14 +92,15 @@ footer .footer-legal p:first-child {
 
 @media (width >= 900px) {
   footer .footer > div {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1.6fr) repeat(var(--footer-cols, 1), minmax(0, 1fr));
     align-items: start;
-    padding: 48px 32px 0;
+    gap: 32px 48px;
+    padding: 64px 32px 0;
   }
 
   footer .footer-legal {
     grid-column: 1 / -1;
-    margin: 8px -32px 0;
-    padding: 20px 32px 28px;
+    margin: 8px 0 0;
+    padding: 20px 0 28px;
   }
 }

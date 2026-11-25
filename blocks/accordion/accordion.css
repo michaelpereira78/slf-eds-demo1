@@ -1,0 +1,49 @@
+.accordion {
+  border-top: 1px solid var(--border-color);
+}
+
+.accordion details {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.accordion summary {
+  position: relative;
+  padding: 18px 48px 18px 0;
+  color: var(--navy-color);
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion summary > p {
+  display: inline;
+  margin: 0;
+}
+
+.accordion summary::after {
+  content: '+';
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  color: var(--link-color);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.accordion details[open] summary::after {
+  content: '\2013';
+}
+
+.accordion .accordion-item-body {
+  padding: 0 0 20px;
+}
+
+.accordion .accordion-item-body > :first-child {
+  margin-top: 0;
+}

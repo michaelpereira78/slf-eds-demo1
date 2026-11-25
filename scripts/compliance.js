@@ -7,6 +7,7 @@ import { loadCSS } from './aem.js';
 import {
   STATUS, getPageStatus, saveRequest, normalizePath,
 } from './compliance-data.js';
+import { logAudit } from './forms.js';
 
 const COMPLIANCE_EMAIL = 'compliance@example.com';
 const SKIP = ['/compliance', '/tools/', '/fragments/', '/nav', '/footer'];
@@ -96,11 +97,24 @@ function buildDialog(onDone) {
       Reviewer: data.get('team'),
       Notes: data.get('notes'),
     });
+    // audit trail: one row per submission in the compliance-audit-log sheet
+    const logged = logAudit({
+      event: 'Submitted',
+      advisor: data.get('name'),
+      site: siteName(),
+      pagePath: path,
+      changeSummary: data.get('notes'),
+      submittedBy: data.get('name'),
+      status: 'Pending review',
+      reviewer: data.get('team'),
+      notes: 'Checklist confirmed (3 of 3)',
+    });
     const body = encodeURIComponent(`Please review: ${window.location.href}\n\nWhat changed: ${data.get('notes') || '-'}\nSubmitted by: ${data.get('name')}`);
     done.replaceChildren(
       el('h2', { text: 'Review requested' }),
       el('p', { text: `${data.get('team')} can now see this page in the review queue. You will be told when it is approved or if changes are needed.` }),
-      el('p', { class: 'compliance-note', text: 'In production, Sidekick\u2019s Review button also adds this exact version to a locked review snapshot, so what Compliance approves is exactly what gets published.' }),
+      el('p', { class: 'compliance-note compliance-audit', text: 'Adding this submission to the compliance audit log\u2026' }),
+      el('p', { class: 'compliance-note', text: 'Your supervisor publishes the page once Compliance approves it. Advisors can edit and preview, but cannot publish.' }),
       el(
         'div',
         { class: 'compliance-actions' },
@@ -110,6 +124,14 @@ function buildDialog(onDone) {
     );
     form.hidden = true;
     done.hidden = false;
+    logged.then((r) => {
+      const line = done.querySelector('.compliance-audit');
+      if (line) {
+        line.textContent = r.mode === 'demo'
+          ? `Audit log: saved in ${r.destination}.`
+          : `Audit log: recorded in the ${r.destination}.`;
+      }
+    });
     onDone();
   });
   dialog.addEventListener('close', () => {
@@ -151,12 +173,39 @@ async function renderBar(bar, status) {
   document.body.style.setProperty('--author-bar-height', `${bar.offsetHeight}px`);
 }
 
+let signedInAs = '';
+
 function listenToSidekick() {
   const handler = () => {
     const bar = document.querySelector('.compliance-bar');
     openRequestDialog(() => bar && renderBar(bar));
   };
-  const attach = (sk) => sk.addEventListener('custom:request-compliance-review', handler);
+  const attach = (sk) => {
+    sk.addEventListener('custom:request-compliance-review', handler);
+    // remember who is signed in to Sidekick (the Admin API status includes the profile)
+    sk.addEventListener('status-fetched', ({ detail }) => {
+      const p = detail && detail.profile;
+      if (p) signedInAs = p.email || p.name || signedInAs;
+    });
+    sk.addEventListener('logged-in', ({ detail }) => {
+      if (detail) signedInAs = detail.email || detail.name || signedInAs;
+    });
+    // Publish only works for the publish role (enforced by the Admin API);
+    // log it for the audit trail
+    sk.addEventListener('published', ({ detail }) => {
+      const paths = Array.isArray(detail) ? detail : [detail];
+      paths.filter(Boolean).forEach((p) => logAudit({
+        event: 'Published',
+        site: siteName(),
+        pagePath: normalizePath(p),
+        submittedBy: signedInAs,
+        reviewer: signedInAs,
+        status: 'Published',
+        decisionDate: new Date().toISOString().slice(0, 10),
+        notes: 'Published from Sidekick',
+      }));
+    });
+  };
   const sk = document.querySelector('aem-sidekick');
   if (sk) attach(sk);
   else document.addEventListener('sidekick-ready', () => attach(document.querySelector('aem-sidekick')), { once: true });

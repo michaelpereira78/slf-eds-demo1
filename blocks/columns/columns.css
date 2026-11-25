@@ -17,6 +17,8 @@
 
 .columns > div > .columns-img-col img {
   display: block;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
 }
 
 @media (width >= 900px) {
@@ -30,4 +32,74 @@
     flex: 1;
     order: unset;
   }
+}
+
+/* photo columns: rounded, cropped to a calm 4:3 */
+.columns > div > .columns-img-col picture {
+  display: block;
+  overflow: hidden;
+  border-radius: calc(var(--radius) + 4px);
+  box-shadow: var(--card-shadow);
+}
+
+/* a bold first line above a heading reads as an eyebrow */
+.columns > div > div > p:first-child > strong:only-child {
+  color: var(--link-color);
+  font-size: var(--body-font-size-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.columns > div > div > p:first-child:has(> strong:only-child) + :is(h2, h3) {
+  margin-top: 4px;
+}
+
+.columns > div > div > h2 {
+  margin-top: 0.3em;
+}
+
+.columns ul {
+  padding-left: 0;
+  list-style: none;
+}
+
+.columns ul li {
+  position: relative;
+  margin: 10px 0;
+  padding-left: 32px;
+}
+
+.columns ul li::before {
+  content: '';
+  position: absolute;
+  top: 0.3em;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--accent-tint);
+  box-shadow: inset 0 0 0 2px var(--accent-color);
+}
+
+.columns ul li::after {
+  content: '';
+  position: absolute;
+  top: calc(0.3em + 6px);
+  left: 7px;
+  width: 6px;
+  height: 3px;
+  border-left: 2px solid var(--navy-color);
+  border-bottom: 2px solid var(--navy-color);
+  transform: rotate(-45deg);
+}
+
+@media (width >= 900px) {
+  .columns > div {
+    gap: 64px;
+  }
+}
+
+/* text-only columns line up at the top */
+.columns > div:not(:has(picture)) {
+  align-items: start;
 }
