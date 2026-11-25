@@ -1,4 +1,4 @@
-# 12-minute business demo: "Advisor websites without a developer"
+# 15-minute business demo: "Advisor websites without a developer"
 
 All firms, people and contact details are fictional. Not affiliated with Sun Life.
 Preview host used below: `https://main--slf-eds-demo1--michaelpereira78.aem.page` (shortened to **PREVIEW**).
@@ -12,8 +12,13 @@ Preview host used below: `https://main--slf-eds-demo1--michaelpereira78.aem.page
   2. The Google Drive content folder
   3. The `index` Google Doc (Maple Ridge home)
   4. The `northstar/index` Google Doc
-  5. **PREVIEW/compliance**
-- On `/compliance`, click **Reset demo** so the queue starts clean.
+  5. **PREVIEW/advisor** (Advisor workspace)
+  6. **PREVIEW/admin** (Supervisor console)
+  7. The `forms/compliance-audit-log` Google Sheet, on the `incoming` tab (only if ADMIN-SETUP step 4 is done)
+- On `/admin`, click **Reset demo** in the approval queue so it starts clean, and **Clear this
+  browser** under the audit log and the Figma requests, so only your live rows show.
+- Best: sign in to Sidekick with an **advisor** account in one Chrome profile and a **supervisor**
+  account in another (ADMIN-SETUP step 5), so you can show Publish greyed out vs enabled.
 - Optional: a phone with **PREVIEW/campaigns/retirement-checkup** open, or Chrome DevTools at 375 px.
 - Rehearse once, then undo the document edits (see "Reset afterwards").
 
@@ -24,7 +29,7 @@ Preview host used below: `https://main--slf-eds-demo1--michaelpereira78.aem.page
 > Everything you'll see is authored in ordinary Google Docs, runs on Adobe Edge Delivery
 > Services, and no developer touches it during the demo."
 
-Point at the seven cards: "We'll go through each one." Scroll to **Three sites, one platform**.
+Point at the seven cards: "We'll go through each one." Then the **Two workspaces, two roles** cards (Advisor workspace, Supervisor console). Scroll to **Three sites, one platform**.
 
 ### 1:00 to 3:00: 2, Make a content change *(Tab 3, `index` doc)*
 > "Priya just earned a new designation."
@@ -71,18 +76,35 @@ Point at the seven cards: "We'll go through each one." Scroll to **Three sites, 
 > "This is Compliance's view: pending items, who submitted them, the preview link, and the real
 > times each page was last previewed and published."
 - On Northstar, click **Approve**. Go back to the Northstar preview: the bar is green, **Approved**.
-> "In production, Sidekick's Review button puts the exact version into a locked review snapshot.
-> Compliance approves it and that approval publishes it, and only the Compliance role has
-> Publish. No Power Automate, no extra workflow product."
+> "In production, the supervisor reviews the exact version (Sidekick's Review button can lock it
+> into a review snapshot), and only the supervisor role can publish. No extra workflow product."
 
-### 11:00 to 12:00: 1, Generate a new website *(PREVIEW/new-site)*
+
+### 11:00 to 13:00: Two workspaces, two roles *(Tabs 5 and 6)*
+- **Advisor workspace** (`/advisor`):
+> "This is the advisor's home: edit, add a page, approved content, preview, layout requests,
+> submit for review, track submissions, help. Everything an advisor needs, nothing they shouldn't do."
+- Point at **You can / Your supervisor does**. In the advisor's Sidekick, show **Publish greyed out**:
+> "That's not a hidden button. The platform rejects a publish from an advisor account on the server."
+- Fill **Submit for compliance review** (Advisor `Priya Nair`, page `/campaigns/retirement-checkup`,
+  a one-line summary, tick the checks), **Submit for review**. Show the confirmation and reference number.
+- **Supervisor console** (`/admin`): the queue, **Approve** the campaign. Scroll to **Compliance
+  audit log**: both rows are there (Submitted, then Approved with reviewer and date).
+  If Option A/B is connected, switch to Tab 7 and show the same rows in the Google Sheet.
+> "Every submission and every decision lands in a spreadsheet Compliance can audit. Publishes are
+> also in the platform's own log."
+- Click **Import a design from Figma** > fill the form > **Send to MarTech Engineering**:
+> "Custom designs go to MarTech Engineering's agentic Figma-to-EDS build, with a reference number
+> and a row in their intake sheet. They come back as approved blocks, not a one-off site."
+
+### 13:00 to 14:00: 1, Generate a new website *(PREVIEW/new-site, or **Create a new advisor website** on `/admin`)*
 - Type `Prairie Sky Financial`, `Regina, SK`, `Sam Rivera, CFP`. Click the **Harbour** and **Slate**
   themes and watch the page change. Choose **Advisor team**, then **Create site request**.
 > "The platform team runs this one command. It creates the starter documents in our brand and
 > template, plus the single admin call that creates the site. Harbourview and Northstar were set
 > up this way. A new advisor site is a same-day task, not a project."
 
-### Close
+### 14:00 to 15:00: Close
 > "Seven capabilities, no developer in the loop, one platform we already license. SSO, hosting,
 > CDN, security and approvals are part of the platform. A custom CMS would have to build every
 > one of them."
@@ -97,6 +119,11 @@ Point at the seven cards: "We'll go through each one." Scroll to **Three sites, 
 - Sidekick buttons missing: the Sidekick JSON hasn't been posted yet (ADMIN-SETUP step 3). Use the
   status bar and the `/compliance` page instead; they work without it.
 
+- Form says **Demo mode**: the sheet isn't connected yet (ADMIN-SETUP step 4). The demo still works;
+  say "in production this row lands in the Google Sheet" and show the table on the page.
+- Sidekick asks you to sign in: roles are on (ADMIN-SETUP step 5). Sign in with your Google account.
+
 **Reset afterwards:** in `index`, change Priya back to `Priya Nair, CFP`, the section style back to
 `Light` and the theme back to `Forest`. Delete any pasted fragment link in `northstar/index`.
-Preview both. Click **Reset demo** on `/compliance`.
+Preview both. On `/admin`, click **Reset demo** and **Clear this browser**. If the sheets are
+connected, delete your rehearsal rows from the `incoming` tabs (or leave them: they are your audit trail).

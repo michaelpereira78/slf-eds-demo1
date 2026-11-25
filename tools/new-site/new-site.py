@@ -143,11 +143,13 @@ curl -fsS -X PUT "https://admin.hlx.page/config/$ORG/sites/$SITE.json" \\
 curl -fsS -X POST "https://admin.hlx.page/config/$ORG/sites/$SITE/sidekick.json" \\
   -H "x-auth-token: $TOKEN" -H 'content-type: application/json' --data @"$(dirname "$0")/sidekick.json"
 
-# 3. (Production) only Compliance can publish. Uncomment and replace the example addresses.
-#    Note: adding roles turns on sign-in for everyone using Sidekick on this site.
+# 3. Roles: advisors author and preview, supervisors publish (enforced by the Admin API).
+#    Replace the example addresses and include YOUR OWN account in "admin" so you are not locked
+#    out. Adding roles turns on sign-in for everyone using Sidekick on this site.
+#    Same JSON as docs/access-admin.json in the code repository.
 # curl -fsS -X POST "https://admin.hlx.page/config/$ORG/sites/$SITE/access/admin.json" \\
 #   -H "x-auth-token: $TOKEN" -H 'content-type: application/json' \\
-#   --data '{{"role":{{"basic_author":["*@example.com"],"publish":["compliance-team@example.com"]}}}}'
+#   --data '{{"role":{{"admin":["you@example.com"],"publish":["supervisor@example.com"],"author":["advisor@example.com"]}},"requireAuth":"auto"}}'
 
 echo "Created. Preview: https://main--$SITE--$ORG.aem.page/ (404 until the first document is previewed)"
 """

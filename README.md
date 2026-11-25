@@ -31,7 +31,9 @@ workflow, new-site generation, configuration, security, known issues and backlog
 
 | Path | Purpose | Template / Theme | Compliance in demo |
 |---|---|---|---|
-| `/demo` | presenter hub: seven capability cards | n/a / Forest | n/a |
+| `/demo` | presenter hub: seven capability cards, links to both workspaces | n/a / Forest | n/a |
+| `/advisor` | Advisor workspace (author and preview; submit for review; layout requests; my submissions; help) | n/a / Forest | n/a |
+| `/admin`, `/admin/figma-import` | Supervisor console (approval queue, publish, new sites, advanced layout, audit log, roles) and the Figma import form for MarTech Engineering | n/a / Forest | n/a |
 | `/` , `/advisors/jordan-lee` | Maple Ridge team site and profile | advisor-team / Forest | Approved |
 | `/harbourview/` (+ nav, footer) | second firm | advisor-team / Harbour | Pending review |
 | `/northstar/` (+ nav, footer) | solo practice | solo-advisor / Slate | Changes requested |
@@ -40,6 +42,10 @@ workflow, new-site generation, configuration, security, known issues and backlog
 | `/fragments/...` | approved content (5 fragments) | n/a | Approved (badge) |
 | `/tools/sidekick/templates/*`, `/tools/sidekick/blocks/*`, `/tools/sidekick/library` (sheet) | Sidekick Library content | n/a | n/a |
 | `/compliance-queue` (sheet) | review queue owned by Compliance | n/a | n/a |
+| `/forms/compliance-audit-log`, `/forms/figma-import-requests`, `/forms/layout-change-requests` (sheets) | form submissions (`incoming` tab) and the compliance audit log | n/a | n/a |
+
+Roles (advisors author, supervisors publish): `docs/access-admin.json`. Form logging and exact Drive
+steps: `docs/ADMIN-SETUP.md` steps 4 to 6. Photo credits: `docs/PHOTO-CREDITS.md`.
 
 ## Repository layout
 

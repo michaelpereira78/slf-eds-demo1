@@ -814,18 +814,25 @@ read from `<out>/_avatars/<slug>.png`.
 | Area | Current state | Notes |
 |---|---|---|
 | Content editing | Google Drive sharing of the site folder | Restrict `/fragments/` and `compliance-queue` to Compliance in production |
-| Preview/publish | No access config: anonymous default role `basic_publish` | Anyone with Sidekick and Drive access can publish. Configure roles for production |
+| Preview/publish | Roles ready in `docs/access-admin.json` (`author` advisors, `publish` supervisors, `admin` platform). As of Nov 25, 2026 anonymous Admin API calls already answer 401, so sign-in is required | Enforced server-side by the Admin API once posted (ADMIN-SETUP step 5) |
 | Admin/config | Admin API with `x-auth-token`; tools.aem.live Admin Edit / Site Admin | Tokens are personal; never commit them; `create-site.sh` reads `AEM_ADMIN_TOKEN` |
 | Code | GitHub repo + Code Sync app | Protect `main` (required PR review, required lint check) |
 | Author-only UI | `isAuthorHost()` hides bar and badges on `*.aem.live` and custom domains | Obscurity only, not access control |
 | Page security | CSP with nonce + `strict-dynamic`, Trusted Types default policy | `tools/sidekick/library.html` is served as a static file (outside `head.html`) |
 | Data | All content fictional; no PII; demo state only in the reviewer's browser | `/compliance` is published to live per setup; it shows demo data only |
-| Snapshots | `author` role edits snapshots; `publish` role approves | `basic_author` cannot edit snapshots |
+| Snapshots | `publish` creates, edits and approves snapshots (`snapshot:write`); `author` can only read and delete them | Advisors submit through the review form/dialog instead of snapshots |
+| Workspace pages | `/advisor`, `/admin`, `/admin/figma-import` are ordinary pages | Not access-protected; their buttons are demo actions. Use site authentication if they must be private |
+| Form endpoints | Forms Submission Service / Apps Script accept anonymous POSTs | Audit rows can be spoofed by anyone who knows the endpoint; the Admin API log is the authoritative publish record |
 
-Role reference (aem.live): `basic_author` (preview, no publish, no snapshot write), `author`
-(+ snapshot write, list, logs), `basic_publish` (`basic_author` + publish), `publish` (`author` +
-publish), `develop` (+ code), `config` (redacted config read), `config_admin` (+ config write),
-`admin` (all).
+Role reference (https://www.aem.live/docs/roles-permissions, checked Nov 25, 2026): `author`
+(preview read/write/delete/list, edit list, jobs, logs, snapshot read/delete; **no** `live:write`,
+**no** `snapshot:write`, no config write), `publish` (`author` + `live:write/delete/list`,
+`snapshot:write`, `config:read`, **`config:write`**), `develop` (+ forced code delete), `config`
+(redacted config read), `config_admin` (`publish` permissions), `admin` (all). Sidekick reads the
+user's permissions from the status call and disables **Publish** without `live:write`
+(`src/extension/app/plugins/publish/publish.js` in adobe/aem-sidekick); the Admin API answers 403
+regardless of the client. The legacy `basic_author` / `basic_publish` names lack `edit:list`
+(no file listing in Sidekick); use `author` / `publish`.
 
 ## 13. Known limitations, review findings and backlog
 
@@ -845,17 +852,18 @@ publish), `develop` (+ code), `config` (redacted config read), `config_admin` (+
 - Status is keyed by path, not by version: once a path is `Approved` in the queue, later edits still
   show **Approved** in the bar (DEMO-SCRIPT step "1:00 to 3:00" describes the edit as unreviewed,
   but the bar will not say so).
-- Publishing is not restricted (no roles), by design for the demo.
+- Publishing is restricted only after `docs/access-admin.json` is posted (ADMIN-SETUP step 5).
+- The Approve / Request changes buttons on `/admin` and `/compliance` change the demo queue in that
+  browser and append an audit row; they do not publish or create snapshots.
 - The review dialog sends no notification (`mailto:` only).
 - Site creation is a printed command, not an automated action; it needs a platform admin token.
 - The queue page is public on live once published; its buttons only affect the viewer's browser.
 
 ### 13.3 Code and documentation findings (to fix)
 
-1. **Role name for authors.** `docs/ADMIN-SETUP.md` step 4 maps authors to `basic_author`, which lacks
-   `snapshot:write`. Authors would not be able to add pages to a snapshot or request a review. Use
-   `author` for advisors and `publish` for Compliance.
-2. **Generator placeholder breaks Team Cards.** `new-site.py` (`advisor-team`) puts the text `[photo]`
+1. **Fixed (v2).** Role name for authors: ADMIN-SETUP now maps advisors to `author` (not
+   `basic_author`) and supervisors to `publish`; see `docs/access-admin.json`.
+2. **Fixed (v2): `team-cards.js` ignores a `[photo]` placeholder cell.** Was: `new-site.py` (`advisor-team`) puts the text `[photo]`
    in the image cell. `team-cards.js` treats the first non-empty text cell as the name, so the card's
    name renders as "[photo]" and the real name becomes the title until an author pastes a photo.
    Use an empty cell or a placeholder image.
@@ -864,7 +872,7 @@ publish), `develop` (+ code), `config` (redacted config read), `config_admin` (+
    uses only the pathname, so a repoless site fetches `/fragments/disclosure` from itself (404,
    disclosure silently missing). The same applies to the Library sheet, `/compliance` and the queue.
    README "Limitations" mentions fragments; the generator does not create these documents.
-4. **Header button class mismatch.** `header.js` looks for `.button-container`, but
+4. **Fixed (v2), also in `404.html`.** Header button class mismatch. `header.js` looks for `.button-container`, but
    `decorateButtons()` in `scripts.js` creates `.button-wrapper`. If an author bolds the brand link,
    `brandLink.closest('.button-container')` is `null` and the header throws. `404.html` has the same
    stale class. Change to `.button-wrapper` with a null check.
@@ -883,7 +891,9 @@ publish), `develop` (+ code), `config` (redacted config read), `config_admin` (+
    in `compliance-data.js`; the `Compliance ID` metadata; the `profile` class on `Hero (Profile)`.
 10. **Hard-coded fallbacks.** `siteInfo()` falls back to `main`/`slf-eds-demo1`/`michaelpereira78`;
     `COMPLIANCE_EMAIL = 'compliance@example.com'`; reviewer name `R. Castillo (you)` in the queue.
-11. **Admin status calls will 401** once access control is enabled (anonymous browser fetch).
+11. **Fixed (v2).** Admin status calls answered 401 once access control was on. The queue now only
+    asks when Sidekick is on the page (or `?status=live`), sends credentials, and stops after the
+    first 401/403.
 12. **CI label.** `.github/workflows/main.yaml` step is named "Use Node.js 20" but sets
     `node-version: 24`.
 13. **PR link host.** `AGENTS.md` requires `*.aem.page` branch links; the PR template shows `*.aem.live`.
@@ -948,3 +958,72 @@ References:
 - AEM CLI: <https://github.com/adobe/helix-cli>
 - Keeping it 100 (performance): <https://www.aem.live/developer/keeping-it-100>
 - tools.aem.live (Admin Edit, Site Admin, snapshot admin): <https://tools.aem.live>
+
+## 15. Version 2 (Nov 25, 2026): workspaces, forms, roles and audit log, design refresh
+
+### 15.1 New pages (Drive documents, rendered by `tools/content.py`)
+
+| Path | Purpose | Blocks |
+|---|---|---|
+| `/advisor` | Advisor workspace: edit, add a page, approved content, preview, layout requests, submit for review, my submissions, help | Hero, Cards (Actions), Columns, Request Form (compliance-review, layout-change), Compliance Queue (Mine), Cards (Steps), Accordion |
+| `/admin` | Supervisor console: approval queue, publish, create a site from the template library, advanced layout, Figma import, audit log, roles | Hero, Cards (Actions), Compliance Queue, Cards (Templates), Submissions, Cards (Steps), Cards (Services) |
+| `/admin/figma-import` | Figma intake form for MarTech Engineering | Hero, Request Form (figma-import), Cards (Steps), Submissions |
+| `/forms/compliance-audit-log`, `/forms/figma-import-requests`, `/forms/layout-change-requests` | Google Sheets: `shared-aem` form definition, `incoming` rows, `README` | n/a |
+
+`/demo` links both workspaces ("Two workspaces, two roles"); every site footer has a "Platform demo" column.
+
+### 15.2 New and changed code
+
+| File | What |
+|---|---|
+| `scripts/forms.js` | `submitForm()` (Forms Submission Service for `/forms/...` paths, no-cors JSON POST for https URLs, demo fallback; always local on localhost unless `?forms=live`), `logAudit()`, `AUDIT_COLUMNS`, local history in `localStorage` (`advisor-demo-submissions`) |
+| `blocks/request-form` | Authorable form block. Rows: `Form` (figma-import, layout-change, compliance-review), optional `Submit to` (sheet path or URL), optional `Confirmation`. Fields are defined in JS so the sheet columns always match. Confirmation panel with reference (FIG-/LAY-/CR-), "Recorded in" or "Demo mode", summary, "Submit another". Fires `request-form:submitted` |
+| `blocks/submissions` | Table of this browser's submissions plus sample rows (rows: `Form`, `Sheet`). Updates on `request-form:submitted` and `audit:logged` |
+| `blocks/compliance-queue` | Approve / Request changes append audit rows; `(Mine)` read-only advisor variant; live status only with Sidekick present |
+| `scripts/compliance.js` | Review dialog logs `Submitted`; Sidekick `published` event logs `Published`; captures the signed-in profile from `status-fetched` / `logged-in` |
+| `blocks/stats`, `testimonials`, `banner`, `accordion` | New presentation blocks (value/label strip, quotes, photo CTA band, FAQ) |
+| `blocks/cards` | Variants `Services` (icon badge), `Steps` (numbered), `Actions` (workspace tiles, last link = secondary button). Icons via CSS mask, so they take the theme colour |
+| `blocks/hero` | A picture in its own row becomes a full-bleed background photo with scrim |
+| `blocks/team-cards` | Photo cards (4:3.6), `[photo]` placeholder ignored |
+| `blocks/footer` | Brand / link columns / legal layout |
+| `blocks/header` | `.button-wrapper` fix with null check |
+| `styles/` | Manrope (headings) and Fraunces (Slate theme serif), self-hosted variable woff2; spacing scale, section padding, intro paragraphs |
+| `icons/` | 24 stroke icons used with `:name:` in documents |
+| `images/photos/` | Pexels photos for local drafts; the Drive documents embed the same images. Credits: `docs/PHOTO-CREDITS.md` |
+
+### 15.3 Form submission design
+
+- Preferred: Adobe **Forms Submission Service** (same request the AEM Forms block sends):
+  `POST https://forms.adobe.com/adobe/forms/af/submit/{btoa('/forms/<name>.json')}`,
+  headers `Content-Type: application/json`, `x-adobe-routing: tier=live,bucket=main--slf-eds-demo1--michaelpereira78`,
+  `x-adobe-form-hostname`, body `{"data": {...}}`; 201 on success. CORS preflight verified on
+  Nov 25, 2026 (allowed headers include `x-adobe-routing`, `x-adobe-form-hostname`; origin `*`).
+  Requires: AEM Forms entitlement and repository enablement by Adobe; the sheet shared with
+  `forms@adobe.com` (Editor); the sheet previewed **and published** (the service validates against
+  the live `shared-aem` definition); the `incoming` headers equal to the field names.
+- Fallback: Google Apps Script web app (`docs/apps-script/form-to-sheet.gs`), private sheet,
+  `?sheet=<tab>` query parameter. Responses are opaque (no-cors), so success cannot be confirmed in
+  the browser. No Power Automate anywhere.
+- Both endpoints accept anonymous posts: audit rows are a convenience log, not tamper-proof
+  evidence. Authoritative publish history: `GET https://admin.hlx.page/log/{org}/{site}/main?since=7d`.
+
+### 15.4 Roles and publishing
+
+- `docs/access-admin.json`: `admin` (platform owner), `publish` (supervisors), `author`
+  (advisors), `requireAuth: auto`. Posted with Admin Edit to `.../access/admin.json`.
+- Enforced: publish/unpublish/bulk publish and snapshot write need `live:write` / `snapshot:write`,
+  which `author` lacks; the Admin API answers 403 and Sidekick disables the button.
+- Not enforced: page visibility of `/advisor` and `/admin`; the demo Approve buttons; who can post
+  rows to the forms endpoints. `publish` also includes `config:write`.
+- `docs/sidekick.json`: `{"id": "publish", "confirm": true}` (core plugin override, adds a confirm
+  dialog for supervisors), workspace links, review request, snapshot review, queue.
+
+### 15.5 Verification (local, Nov 25, 2026)
+
+- `npm run lint` clean.
+- Playwright at 375 px and 1440 px for `/`, `/advisor`, `/admin`, `/admin/figma-import`,
+  `/harbourview/`, `/northstar/`, `/demo`, `/advisors/jordan-lee`, `/compliance`, `/templates`,
+  `/layouts`, `/new-site`, `/campaigns/retirement-checkup`: no console errors, no horizontal overflow.
+  Screenshots: `/workspace/slf-eds-demo1-shots/v2/` on the build machine.
+- Form flows tested: Figma import confirmation, advisor compliance submission, supervisor approval,
+  both rows visible in the audit log table (demo mode, since local development never posts).
