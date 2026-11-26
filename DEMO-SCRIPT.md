@@ -114,6 +114,27 @@ Start with **Two workspaces, two roles**. Then the seven capability cards. Scrol
 
 ---
 
+## Optional add-on (5 minutes): Google Docs vs da.live
+
+Only if the second site is set up ([docs/DA-LIVE-SETUP.md](docs/DA-LIVE-SETUP.md)). Open two tabs: the `index`
+Google Doc of the Drive site, and the same page in da.live
+(`https://da.live/edit#/michaelpereira78/slf-eds-demo1-da/index`).
+
+1. **0:00, Google Docs today.** Change Priya's title in the Google Doc, Sidekick **Preview**.
+   *"Today this is a normal Google Doc plus the Sidekick."*
+2. **1:00, da.live.** Make the same change in da.live and click **Preview**.
+   *"Same page, edited in a browser editor made for web pages: blocks as tables, one-click preview,
+   no Google account needed."* Open `https://main--slf-eds-demo1-da--michaelpereira78.aem.page/` to show it renders with the same code.
+3. **2:00, blocks.** Use the editor's **Block** and **Library** menus. *"Advisors insert approved blocks."*
+4. **3:00, roles.** As the pretend advisor, click **Publish**: it is refused (403). *"Advisors author, supervisors publish, on both."*
+   As the supervisor, **Publish**, then open the `.aem.live` page.
+5. **4:30, close.** *"Two ways to edit, one codebase. Which one a team uses is a setting."*
+
+Be ready to say: da.live needs an Adobe ID for every editor; the two sites hold separate copies of the
+content; forms on the da.live site stay in demo mode unless the Apps Script option is connected.
+
+---
+
 **If something goes wrong**
 - Preview shows old content: wait 5 seconds and refresh. Docs save automatically, but give it a moment.
 - No compliance bar: it only shows on `.aem.page` previews (never on `.aem.live`), and only on pages

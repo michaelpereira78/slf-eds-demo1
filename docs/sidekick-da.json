@@ -1,0 +1,76 @@
+{
+  "project": "Advisor Demo (da.live)",
+  "editUrlLabel": "Document Authoring",
+  "editUrlPattern": "https://da.live/edit#/{{org}}/{{site}}{{pathname}}",
+  "plugins": [
+    {
+      "id": "publish",
+      "confirm": true
+    },
+    {
+      "id": "library",
+      "title": "Library",
+      "environments": [
+        "edit"
+      ],
+      "url": "/tools/sidekick/library.html"
+    },
+    {
+      "id": "advisor-workspace",
+      "title": "Advisor workspace",
+      "environments": [
+        "edit",
+        "dev",
+        "preview"
+      ],
+      "url": "/advisor",
+      "pinned": false
+    },
+    {
+      "id": "supervisor-console",
+      "title": "Supervisor console",
+      "environments": [
+        "edit",
+        "dev",
+        "preview",
+        "live",
+        "prod"
+      ],
+      "url": "/admin",
+      "pinned": false
+    },
+    {
+      "id": "request-compliance-review",
+      "title": "Request compliance review",
+      "environments": [
+        "dev",
+        "preview"
+      ],
+      "event": "request-compliance-review"
+    },
+    {
+      "id": "review",
+      "title": "Review...",
+      "environments": [
+        "dev",
+        "preview",
+        "review"
+      ],
+      "url": "https://tools.aem.live/tools/snapshot-admin/popover.html",
+      "isPopover": true,
+      "popoverRect": "width:400px; height:400px",
+      "passConfig": true,
+      "passReferrer": true
+    },
+    {
+      "id": "compliance-queue",
+      "title": "Compliance queue",
+      "environments": [
+        "preview",
+        "review"
+      ],
+      "url": "/compliance",
+      "pinned": false
+    }
+  ]
+}

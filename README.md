@@ -11,6 +11,7 @@ Docs (or Word) and runs on one shared codebase.
 **Start here:** https://main--slf-eds-demo1--michaelpereira78.aem.page/demo (after the content
 upload in [docs/ADMIN-SETUP.md](docs/ADMIN-SETUP.md)).
 **Presenter script:** [DEMO-SCRIPT.md](DEMO-SCRIPT.md), a 15-minute walkthrough of the seven capabilities plus the Advisor workspace and Supervisor console.
+**Optional second editor (da.live):** [docs/DA-LIVE-SETUP.md](docs/DA-LIVE-SETUP.md), step by step: add a second repoless site `slf-eds-demo1-da` on this same code with content authored in da.live (Document Authoring / Experience Workspace) instead of Google Drive. The Drive site is not changed.
 **Developer handoff:** [docs/TECHNICAL-HANDOFF.md](docs/TECHNICAL-HANDOFF.md), the technical reference for developers taking
 over the platform (architecture diagrams, repository map, workspaces, forms, audit log, roles, content model, templates, theming, compliance
 workflow, new-site generation, configuration, security, known issues and backlog).

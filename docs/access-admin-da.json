@@ -1,0 +1,16 @@
+{
+  "role": {
+    "admin": [
+      "YOUR-GOOGLE-ACCOUNT@gmail.com"
+    ],
+    "publish": [
+      "supervisor.one@example.com",
+      "supervisor.two@example.com"
+    ],
+    "author": [
+      "advisor.one@example.com",
+      "advisor.two@example.com"
+    ]
+  },
+  "requireAuth": "auto"
+}

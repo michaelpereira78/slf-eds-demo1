@@ -1,0 +1,5 @@
+https://main--slf-eds-demo1--michaelpereira78.aem.page/compliance-queue.json
+https://main--slf-eds-demo1--michaelpereira78.aem.page/tools/sidekick/library.json
+https://main--slf-eds-demo1--michaelpereira78.aem.page/forms/compliance-audit-log.json
+https://main--slf-eds-demo1--michaelpereira78.aem.page/forms/figma-import-requests.json
+https://main--slf-eds-demo1--michaelpereira78.aem.page/forms/layout-change-requests.json
