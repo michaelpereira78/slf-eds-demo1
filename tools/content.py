@@ -752,9 +752,9 @@ PAGES['approved-content'] = {
 
 # ---------------------------------------------------------------- demo hub
 CAPS = [
-    ('1. Generate a new website', 'Fill in a short request form and pick a theme and template. The platform '
-     'team turns it into a ready-to-edit folder of documents in minutes.', 'Open the site request form', '/new-site'),
-    ('2. Make content changes', 'Advisors edit the Word or Google Doc and click Preview. After approval a supervisor '
+    ('1. Generate a new website', 'From the supervisor console, pick a template and a look. The starter pages for '
+     'the new practice are ready to edit in minutes.', 'Open the new site form', '/admin/new-site'),
+    ('2. Make content changes', 'Advisors open a document, make a change and preview it privately. After approval a supervisor '
      'publishes, and it is live worldwide in seconds.', 'Open the advisor workspace', '/advisor'),
     ('3. Make minor layout changes', 'Change a section style (Light, Dark, Centered, Sidebar) or a block '
      'variant by typing one word in the document.', 'See the layout gallery', '/layouts'),
@@ -764,38 +764,38 @@ CAPS = [
      'See Harbourview (Harbour theme)', '/harbourview/'),
     ('6. Reuse approved content', 'Product descriptions, calls to action and disclosures are written once by '
      'Compliance and reused everywhere.', 'Open the approved content library', '/approved-content'),
-    ('7. Compliance review and approval', 'Advisors submit for review; supervisors approve or send back changes '
-     'and publish. Every step is logged in an audit sheet.', 'Open the supervisor console', '/admin'),
+    ('7. Compliance review and approval', 'Advisors submit a short note from their workspace; supervisors approve or send back '
+     'changes from the console and then publish. Every step is logged.', 'Open the approval queue', '/admin/approvals'),
 ]
 
 PAGES['demo'] = {
     'metadata': {
         'Title': 'Platform demo | Advisor Demo',
-        'Description': 'Seven things business users can do on the advisor web platform, without a developer.',
+        'Description': 'Two workspaces, one platform: advisors update their own sites and supervisors stay in control, with no developer in the loop.',
         'Theme': 'Forest',
         'Robots': 'noindex',
     },
     'sections': [
         [('block', 'Hero (Light, Centered)', [[[
             ('p', ['Advisor web platform demo']),
-            ('h1', 'Seven things business users can do without a developer'),
-            ('p', ['Everything on this demo is authored in ordinary documents and runs on Adobe Edge Delivery '
-                   'Services. All firms, people and contact details are fictional.']),
+            ('h1', 'Two workspaces. One platform. No developer required.'),
+            ('p', ['Advisors update their own websites in ordinary documents. Supervisors review, approve and '
+                   'launch new sites. Everything you will see is fictional, and this is not a Sun Life website.']),
         ]]])],
         [
             ('h2', 'Two workspaces, two roles'),
-            ('p', ['Advisors maintain their own sites; supervisors approve, publish and grow the platform.']),
+            ('p', ['Each role has its own home, its own menu, and only the tools that belong there.']),
             ('block', 'Cards (Actions)', action_rows([
-                ('edit', 'Advisor workspace', 'Edit and preview your site, use approved content and templates, request layout '
-                 'changes, submit for compliance review and track your submissions. Author role: no publishing.',
+                ('edit', 'Advisor workspace', 'A simple home for advisors: update a page, add a page, use approved wording, '
+                 'send a change for review and follow its progress. Advisors cannot publish.',
                  'Open the advisor workspace', '/advisor'),
-                ('approve', 'Supervisor console', 'Approve submissions, publish, create new advisor sites from templates, make '
-                 'advanced layout updates and import custom designs from Figma. Publish role.',
+                ('approve', 'Supervisor console', 'A dashboard for supervisors: the review queue, advisor sites, new site launches, '
+                 'layout changes, Figma imports and the audit log. Supervisors publish.',
                  'Open the supervisor console', '/admin'),
             ])),
             section_style('Light'),
         ],
-        [('h2', 'The seven capabilities'), ('block', 'Cards (Capabilities)', [
+        [('h2', 'What you can do, without a developer'), ('block', 'Cards (Capabilities)', [
             [[('h3', t), ('p', [d]), link_p(lt, href)]] for t, d, lt, href in CAPS
         ])],
         [
@@ -981,109 +981,353 @@ PAGES['compliance'] = {
 }
 
 # =====================================================================
-# WORKSPACES: advisor landing page and supervisor / admin console
+# WORKSPACES: advisor and supervisor consoles (dashboard + subpages)
 # =====================================================================
 DRIVE_AUDIT_LOG = 'https://drive.google.com/drive/search?q=compliance-audit-log'
 
-PAGES['advisor'] = {
-    'metadata': {
-        'Title': 'Advisor workspace | Advisor Demo',
-        'Description': 'Everything an advisor needs to keep their own website current: edit, preview, '
-                       'approved content, layout requests and compliance review.',
+
+def workspace_meta(title, description, nav, footer):
+    return {
+        'Title': title,
+        'Description': description,
         'Theme': 'Forest',
+        'Template': 'workspace',
+        'Nav': nav,
+        'Footer': footer,
         'Robots': 'noindex',
-    },
+    }
+
+
+# ---- Advisor workspace ------------------------------------------------
+
+PAGES['advisor/nav'] = {
+    'metadata': {},
+    'sections': [
+        [link_p('Advisor workspace', '/advisor')],
+        [('ul', [
+            [('a', 'Dashboard', '/advisor')],
+            [('a', 'My website', '/advisor/my-website')],
+            [('a', 'Edit content', '/advisor/edit')],
+            [('a', 'Approved content', '/advisor/approved-content')],
+            [('a', 'Submissions', '/advisor/submissions')],
+            [('a', 'Help', '/advisor/help')],
+        ])],
+        [link_p('Submit a change', '/advisor/submit-review?modal', 'b-a')],
+    ],
+}
+
+PAGES['advisor/footer'] = {
+    'metadata': {},
+    'sections': [
+        [link_p('Advisor workspace', '/advisor'),
+         ('p', ['Update your website in ordinary documents. Your supervisor puts approved changes live.'])],
+        [('p', [('b', 'In this workspace')]), ('ul', [
+            [('a', 'Dashboard', '/advisor')],
+            [('a', 'My website', '/advisor/my-website')],
+            [('a', 'Submissions', '/advisor/submissions')],
+            [('a', 'Help', '/advisor/help')],
+        ])],
+        [('p', [('b', 'Platform demo')]), ('ul', [
+            [('a', 'Demo hub', '/demo')],
+            [('a', 'Supervisor console', '/admin')],
+        ])],
+        [('p', ['Demo, not affiliated with Sun Life']),
+         ('p', ['All names and contact details are fictional.'])],
+    ],
+}
+
+PAGES['advisor'] = {
+    'metadata': workspace_meta(
+        'Advisor workspace | Advisor Demo',
+        'Your website, updated in minutes, no tech skills needed.',
+        '/advisor/nav', '/advisor/footer'),
     'sections': [
         [('block', 'Hero (Light)', [[[
             ('p', ['Advisor workspace']),
-            ('h1', 'Keep your website current, without a developer'),
-            ('p', ['Edit your pages in Google Docs, preview them, reuse approved wording and send changes to '
-                   'Compliance, all from here. You author and preview; your supervisor publishes once '
-                   'Compliance approves.']),
-            link_p('Submit a change for review', '/advisor#submit-for-compliance-review', 'b-a'),
-            link_p('See my submissions', '/advisor#my-submissions', 'i-a'),
+            ('h1', 'Your website, updated in minutes'),
+            ('p', ['No tech skills needed. Change a photo, tweak your bio or start a new page in a familiar '
+                   'document, then send it for a quick review. Your supervisor puts it live once it is approved.']),
+            link_p('Update my site', '/advisor/edit', 'b-a'),
+            link_p('Submit a change for review', '/advisor/submit-review?modal', 'i-a'),
         ]]])],
         [
-            ('h2', 'What do you want to do?'),
+            ('h2', 'At a glance'),
+            ('p', ['How your recent changes are doing. Open any card to see the details.']),
+            ('block', 'Compliance Queue (Mine, Summary)', [
+                [[('p', ['View all'])], [link_p('View my submissions', '/advisor/submissions')]],
+            ]),
+        ],
+        [
+            ('h2', 'What would you like to do?'),
             ('block', 'Cards (Actions)', action_rows([
-                ('edit', 'Edit a page', 'Open the page\u2019s Google Doc from your site folder in Drive, make the change, then click Preview in Sidekick.', 'How to edit', '/advisor#how-to-update-your-site'),
-                ('add', 'Add a new page', 'Copy an approved template (Advisor team, Solo advisor or Campaign) into your folder and fill in the brackets.', 'Browse templates', '/templates'),
-                ('library', 'Use approved content', 'Paste Compliance-approved product wording, calls to action and the disclosure. You cannot change the wording.', 'Open the library', '/approved-content'),
-                ('preview', 'Preview your changes', 'Preview shows your edits on a private address in seconds. Nothing is public until your supervisor publishes.', 'Open my site preview', '/harbourview/'),
-                ('layout', 'Change the layout', 'Switch a section style or block variant yourself, or ask your supervisor for anything bigger.', 'Request a layout change', '/advisor#request-a-layout-change'),
-                ('review', 'Submit for compliance review', 'Send the page to Compliance with a short note. Every submission is recorded in the audit log.', 'Submit for review', '/advisor#submit-for-compliance-review'),
-                ('status', 'Track my submissions', 'See what is with Compliance, what was approved, and what came back with notes.', 'My submissions', '/advisor#my-submissions'),
-                ('help', 'Get help', 'Answers to common questions, and who to contact when you are stuck.', 'Help and FAQ', '/advisor#help-and-faq'),
+                ('edit', 'Edit a page',
+                 'Open the page in a document, make your change, and preview it privately before anyone else sees it.',
+                 'How to edit', '/advisor/edit'),
+                ('add', 'Add a new page',
+                 'Start from an approved template, fill in the blanks, and you have a new page ready for review.',
+                 'Add a page', '/advisor/add-page'),
+                ('library', 'Use approved wording',
+                 'Drop in product descriptions, invitations and the legal disclosure that Compliance has already signed off.',
+                 'Browse approved content', '/advisor/approved-content'),
+                ('preview', 'See my website',
+                 'Your private preview updates in seconds. Nothing goes public until your supervisor publishes it.',
+                 'Open my website', '/advisor/my-website'),
+                ('layout', 'Request a layout change',
+                 'Ask for a new section, a different arrangement, or anything you cannot switch yourself.',
+                 'Request a change', '/advisor/layout-change?modal'),
+                ('review', 'Submit for review',
+                 'Tell Compliance what you changed in a short note. You will get a reference number straight away.',
+                 'Submit a change', '/advisor/submit-review?modal'),
+                ('status', 'Track my submissions',
+                 'See what is with Compliance, what was approved, and what came back with a note.',
+                 'My submissions', '/advisor/submissions'),
+                ('help', 'Get help',
+                 'Short answers to common questions, and who to call when you are stuck.',
+                 'Help and FAQ', '/advisor/help'),
             ])),
         ],
         [
-            ('block', 'Columns', [[
-                [('h3', 'You can'), ('ul', [
-                    ['Edit your own pages in Google Docs or Word'],
-                    ['Preview changes on your private preview address'],
-                    ['Use approved content and approved templates'],
-                    ['Change section styles and block variants'],
-                    ['Submit pages for compliance review'],
-                ])],
-                [('h3', 'Your supervisor does'), ('ul', [
-                    ['Approves your changes with Compliance'],
-                    ['Publishes approved pages to your live site'],
-                    ['Makes advanced layout, theme and template changes'],
-                    ['Creates new advisor sites and Figma imports'],
-                ])],
-            ]]),
-            ('p', [('i', 'Publish is greyed out for advisors in Sidekick. This is enforced by the platform\u2019s '
-                         'role settings, not just hidden: an advisor account has the author role, which cannot publish.')]),
-            section_style('Light'),
-        ],
-        [
-            ('h2', 'Submit for compliance review'),
-            ('p', ['Finished a change? Tell Compliance what changed. The page joins the review queue and the '
-                   'submission is written to the compliance audit log (date, advisor, site, page, summary).']),
-            ('block', 'Request Form', [[[('p', ['Form'])], [('p', ['compliance-review'])]]]),
-            ('p', [('i', 'Tip: you can also click Request compliance review in Sidekick, or Request review in the '
-                         'status bar at the bottom of any preview page.')]),
-        ],
-        [
-            ('h2', 'My submissions'),
-            ('p', ['Your pages in the review process. Changes requested? Edit the page, Preview, then submit again.']),
-            ('block', 'Compliance Queue (Mine)', [[[('p', ['My submissions'])]]]),
-            section_style('Light'),
-        ],
-        [
-            ('h2', 'Request a layout change'),
-            ('p', ['Need something you cannot do with a section style? Describe it here and your supervisor will '
-                   'pick it up (or pass it to MarTech Engineering).']),
-            ('block', 'Request Form', [[[('p', ['Form'])], [('p', ['layout-change'])]]]),
-        ],
-        [
-            ('h2', 'How to update your site'),
+            ('h2', 'How an update goes live'),
             ('block', 'Cards (Steps)', [
-                [[('h3', 'Open the doc'), ('p', ['In Google Drive, open your site folder and the page\u2019s document (index is your home page).'])]],
-                [[('h3', 'Make the change'), ('p', ['Edit text, swap a photo, or paste approved content from Sidekick > Library.'])]],
-                [[('h3', 'Preview'), ('p', ['Click Preview in Sidekick. Your private preview updates in about three seconds.'])]],
-                [[('h3', 'Submit for review'), ('p', ['Click Request compliance review and say what changed.'])]],
-                [[('h3', 'Supervisor publishes'), ('p', ['After approval your supervisor publishes, and the live site updates worldwide.'])]],
+                [[('h3', 'Open the page'), ('p', ['In your site folder, open the document for the page you want to change. The home page is called index.'])]],
+                [[('h3', 'Make the change'), ('p', ['Edit the text, replace a photo, or paste a piece of approved wording.'])]],
+                [[('h3', 'Preview and send'), ('p', ['Preview is private, and ready in a few seconds. Then send a short note so Compliance can take a look.'])]],
+                [[('h3', 'It goes live'), ('p', ['Once it is approved, your supervisor publishes it and your live website updates worldwide.'])]],
             ]),
             section_style('Dark'),
         ],
         [
-            ('h2', 'Help and FAQ'),
+            ('block', 'Columns', [[
+                [('h3', 'You can'), ('ul', [
+                    ['Edit your own pages in a document'],
+                    ['Preview changes on a private address'],
+                    ['Use approved wording and approved templates'],
+                    ['Switch a section style yourself'],
+                    ['Send pages for compliance review'],
+                ])],
+                [('h3', 'Your supervisor does'), ('ul', [
+                    ['Reviews your changes with Compliance'],
+                    ['Publishes approved pages to your live site'],
+                    ['Handles bigger layout and brand changes'],
+                    ['Sets up new advisor websites'],
+                ])],
+            ]]),
+            ('p', [('i', 'You will notice the Publish button is unavailable on your account. That is by design: '
+                         'only a supervisor can put a page live, so nothing reaches the public site before it is approved.')]),
+            section_style('Light'),
+        ],
+    ],
+}
+
+PAGES['advisor/my-website'] = {
+    'metadata': workspace_meta(
+        'My website | Advisor workspace',
+        'Open your private preview or your live website.',
+        '/advisor/nav', '/advisor/footer'),
+    'sections': [
+        [('block', 'Hero (Light, Page)', [[[
+            ('p', ['My website']),
+            ('h1', 'Your site, in preview and live'),
+            ('p', ['Preview is your private copy: it shows your latest edits in a few seconds, and visitors cannot '
+                   'see it. The live site is what the public sees, and it only changes when your supervisor publishes.']),
+        ]]])],
+        [
+            ('h2', 'Open a site'),
+            ('p', ['In this demo you can look at any of the sample firms. On a real workspace, this list would show only your site.']),
+            ('block', 'Cards (Sites)', [
+                [[('p', [('b', 'Approved')]), ('h3', 'Maple Ridge Wealth Partners'),
+                  ('p', ['Calgary team site. The public version is already approved.']),
+                  link_p('Open preview', '/'), link_p('Jordan Lee’s profile', '/advisors/jordan-lee')]],
+                [[('p', [('b', 'Pending review')]), ('h3', 'Harbourview Financial Group'),
+                  ('p', ['Halifax team site. A new home page is waiting for review.']),
+                  link_p('Open preview', '/harbourview/')]],
+                [[('p', [('b', 'Changes requested')]), ('h3', 'Northstar Planning'),
+                  ('p', ['Victoria solo practice. Compliance asked for a wording change.']),
+                  link_p('Open preview', '/northstar/')]],
+            ]),
+        ],
+    ],
+}
+
+PAGES['advisor/edit'] = {
+    'metadata': workspace_meta(
+        'Edit content | Advisor workspace',
+        'Change your website in a familiar document, then preview it privately.',
+        '/advisor/nav', '/advisor/footer'),
+    'sections': [
+        [('block', 'Hero (Light, Page)', [[[
+            ('p', ['Edit content']),
+            ('h1', 'Change a page in a few minutes'),
+            ('p', ['You work in an ordinary document, the same way you would edit a letter. Save, preview, and '
+                   'you will see your update on a private copy of the page.']),
+        ]]])],
+        [
+            ('h2', 'The steps'),
+            ('block', 'Cards (Steps)', [
+                [[('h3', 'Open the document'), ('p', ['In your site folder, open the document for that page. The home page is the one named index.'])]],
+                [[('h3', 'Make the change'), ('p', ['Edit a heading, replace a photo, or add a sentence. For product wording, paste a piece of approved content instead of writing your own.'])]],
+                [[('h3', 'Preview'), ('p', ['Click Preview in the toolbar on the document. Your private preview updates in about three seconds.'])]],
+                [[('h3', 'Send for review'), ('p', ['When you are happy with it, submit the page so Compliance can take a look.'])]],
+            ]),
+            link_p('Submit a change for review', '/advisor/submit-review?modal', 'b-a'),
+            link_p('Browse approved wording', '/advisor/approved-content', 'i-a'),
+        ],
+        [
+            ('h2', 'Things you can do yourself'),
+            ('ul', [
+                ['Change names, titles, phone numbers and short biographies'],
+                ['Replace a photo: click the picture, insert a new one, then preview'],
+                ['Switch a section’s look by changing one word (for example Light to Dark)'],
+                ['Paste approved product wording and the legal disclosure'],
+            ]),
+            ('p', ['Bigger changes, such as a new section or a different page layout, can be requested from your supervisor.']),
+            link_p('Request a layout change', '/advisor/layout-change?modal', 'i-a'),
+            section_style('Light'),
+        ],
+    ],
+}
+
+PAGES['advisor/approved-content'] = {
+    'metadata': workspace_meta(
+        'Approved content | Advisor workspace',
+        'Reuse wording Compliance has already signed off, so you never have to write it from scratch.',
+        '/advisor/nav', '/advisor/footer'),
+    'sections': [
+        [('block', 'Hero (Light, Page)', [[[
+            ('p', ['Approved content']),
+            ('h1', 'Wording you can trust, ready to paste'),
+            ('p', ['Product descriptions, invitations and the legal disclosure are written once by Compliance. '
+                   'You place them on your pages; you cannot edit the words, and that is the point: every site stays accurate.']),
+            link_p('Open the full library', '/approved-content', 'b-a'),
+        ]]])],
+        [
+            ('h2', 'How to add a piece to a page'),
+            ('ol', [
+                ['Open the library and copy the link for the piece you need.'],
+                ['In your page document, paste the link on its own line.'],
+                ['Preview. The approved wording appears, badge and all.'],
+            ]),
+            ('p', ['When Compliance updates a piece, every site that uses it picks up the new wording the next time the page is published.']),
+        ],
+    ],
+}
+
+PAGES['advisor/add-page'] = {
+    'metadata': workspace_meta(
+        'Add a page | Advisor workspace',
+        'Start a new page from an approved template.',
+        '/advisor/nav', '/advisor/footer'),
+    'sections': [
+        [('block', 'Hero (Light, Page)', [[[
+            ('p', ['Add a page']),
+            ('h1', 'Start from a template, not a blank page'),
+            ('p', ['Every new page begins with a layout Brand and Compliance have already approved. '
+                   'Copy one, fill in the brackets, preview, and send it for review.']),
+        ]]])],
+        [
+            ('h2', 'Choose a starting point'),
+            ('block', 'Cards (Templates)', [
+                [[('h3', name), ('p', [desc]), link_p('See an example', ex)]]
+                for name, key, desc, ex, _start in TEMPLATES
+            ]),
+        ],
+        [
+            ('h2', 'Then do this'),
+            ('ol', [
+                ['Open the templates folder in your site’s document library and make a copy of the one you want.'],
+                ['Move the copy into your site folder and give it a clear name.'],
+                ['Replace the text in square brackets, add your photo, and click Preview.'],
+                ['Submit the new page for review when you are happy with it.'],
+            ]),
+            link_p('Submit a new page for review', '/advisor/submit-review?modal', 'b-a'),
+            link_p('Browse all templates', '/templates', 'i-a'),
+            section_style('Light'),
+        ],
+    ],
+}
+
+PAGES['advisor/submit-review'] = {
+    'metadata': workspace_meta(
+        'Submit for review | Advisor workspace',
+        'Send a page to Compliance with a short note. You will get a reference number straight away.',
+        '/advisor/nav', '/advisor/footer'),
+    'sections': [
+        [('block', 'Hero (Light, Page)', [[[
+            ('p', ['Submit for review']),
+            ('h1', 'Tell us what you changed'),
+            ('p', ['A short note is enough. The page joins the review queue, and a row is added to the audit log '
+                   'with the date, your name, the site and a summary.']),
+        ]]])],
+        [
+            ('block', 'Request Form', [[[('p', ['Form'])], [('p', ['compliance-review'])]]]),
+            ('p', [('i', 'You can also start a review from the status bar at the bottom of any preview page.')]),
+        ],
+    ],
+}
+
+PAGES['advisor/layout-change'] = {
+    'metadata': workspace_meta(
+        'Request a layout change | Advisor workspace',
+        'Ask your supervisor for a layout change you cannot make yourself.',
+        '/advisor/nav', '/advisor/footer'),
+    'sections': [
+        [('block', 'Hero (Light, Page)', [[[
+            ('p', ['Layout change']),
+            ('h1', 'Ask for a layout change'),
+            ('p', ['Use this when you need a new section, a different arrangement, or something you cannot switch '
+                   'with a section style. Your supervisor will pick it up, or pass it on if it needs a designer.']),
+        ]]])],
+        [
+            ('block', 'Request Form', [[[('p', ['Form'])], [('p', ['layout-change'])]]]),
+        ],
+    ],
+}
+
+PAGES['advisor/submissions'] = {
+    'metadata': workspace_meta(
+        'My submissions | Advisor workspace',
+        'Follow the pages you have sent for compliance review.',
+        '/advisor/nav', '/advisor/footer'),
+    'sections': [
+        [('block', 'Hero (Light, Page)', [[[
+            ('p', ['Submissions']),
+            ('h1', 'Follow your reviews'),
+            ('p', ['See what is with Compliance, what was approved, and what came back with a note. '
+                   'If changes were requested, edit the page, preview it, and submit it again.']),
+            link_p('Submit a change', '/advisor/submit-review?modal', 'b-a'),
+        ]]])],
+        [
+            ('block', 'Compliance Queue (Mine)', [[[('p', ['My submissions'])]]]),
+        ],
+    ],
+}
+
+PAGES['advisor/help'] = {
+    'metadata': workspace_meta(
+        'Help | Advisor workspace',
+        'Answers to common questions about updating your website.',
+        '/advisor/nav', '/advisor/footer'),
+    'sections': [
+        [('block', 'Hero (Light, Page)', [[[
+            ('p', ['Help']),
+            ('h1', 'Questions, answered quickly'),
+            ('p', ['A short list of the things advisors ask most often. If you are still stuck, your supervisor is the first call.']),
+        ]]])],
+        [
             ('block', 'Accordion', [
-                [[('p', ['Why can\u2019t I publish?'])],
-                 [('p', ['Advisor accounts have the author role: edit and preview only. Publishing is reserved for '
-                         'supervisors so that only Compliance-approved content reaches the live site.'])]],
+                [[('p', ['Why can’t I publish?'])],
+                 [('p', ['Advisor accounts can edit and preview only. Publishing is reserved for supervisors, '
+                         'so only approved content reaches the live site. This is a platform rule, not a hidden button.'])]],
                 [[('p', ['How do I change my photo?'])],
-                 [('p', ['In the Team Cards table, click the photo in the first column, replace it with your new '
-                         'picture (Insert > Image), then Preview.'])]],
+                 [('p', ['In the team table, click the photo in the first column, replace it with your new picture, then preview.'])]],
                 [[('p', ['How do I add approved product wording?'])],
-                 [('p', ['Sidekick > Library > Approved content > Copy link, then paste the link on its own line. '
-                         'Or copy the link from the approved content page.']), link_p('Approved content library', '/approved-content')]],
+                 [('p', ['Copy the link from the approved content library and paste it on its own line in your page.']),
+                  link_p('Approved content', '/advisor/approved-content')]],
                 [[('p', ['My change is not showing on the preview'])],
-                 [('p', ['Wait five seconds and click Preview again; Google Docs saves in the background. Still '
-                         'stuck? Check you edited the document in your own site folder.'])]],
+                 [('p', ['Wait five seconds and click Preview again; documents save in the background. '
+                         'Still stuck? Check you edited the document in your own site folder.'])]],
                 [[('p', ['Who do I contact?'])],
-                 [('p', ['Your supervisor for content and layout questions; MarTech Engineering '
+                 [('p', ['Your supervisor for content and layout questions; the platform team '
                          '(martech-engineering@example.com) for anything technical.'])]],
             ]),
             section_style('Narrow'),
@@ -1091,142 +1335,251 @@ PAGES['advisor'] = {
     ],
 }
 
+
+# ---- Supervisor / admin console ---------------------------------------
+
+PAGES['admin/nav'] = {
+    'metadata': {},
+    'sections': [
+        [link_p('Supervisor console', '/admin')],
+        [('ul', [
+            [('a', 'Dashboard', '/admin')],
+            [('a', 'Approvals', '/admin/approvals')],
+            [('a', 'Sites', '/admin/sites')],
+            [('a', 'New site', '/admin/new-site')],
+            [('a', 'Layouts', '/admin/layouts')],
+            [('a', 'Figma import', '/admin/figma-import')],
+            [('a', 'Audit log', '/admin/audit-log')],
+            [('a', 'Roles', '/admin/roles')],
+        ])],
+        [link_p('Review queue', '/admin/approvals', 'b-a')],
+    ],
+}
+
+PAGES['admin/footer'] = {
+    'metadata': {},
+    'sections': [
+        [link_p('Supervisor console', '/admin'),
+         ('p', ['Review advisor updates, publish what is approved, and launch new advisor websites.'])],
+        [('p', [('b', 'In this console')]), ('ul', [
+            [('a', 'Dashboard', '/admin')],
+            [('a', 'Approvals', '/admin/approvals')],
+            [('a', 'New site', '/admin/new-site')],
+            [('a', 'Audit log', '/admin/audit-log')],
+        ])],
+        [('p', [('b', 'Platform demo')]), ('ul', [
+            [('a', 'Demo hub', '/demo')],
+            [('a', 'Advisor workspace', '/advisor')],
+        ])],
+        [('p', ['Demo, not affiliated with Sun Life']),
+         ('p', ['All names and contact details are fictional.'])],
+    ],
+}
+
 PAGES['admin'] = {
-    'metadata': {
-        'Title': 'Supervisor console | Advisor Demo',
-        'Description': 'Approve advisor content, publish, create advisor websites from templates, make advanced '
-                       'layout updates and request custom designs from Figma.',
-        'Theme': 'Forest',
-        'Robots': 'noindex',
-    },
+    'metadata': workspace_meta(
+        'Supervisor console | Advisor Demo',
+        'Keep every advisor site on brand and on track: reviews, new sites, and custom designs.',
+        '/admin/nav', '/admin/footer'),
     'sections': [
         [('block', 'Hero (Light)', [[[
-            ('p', ['Supervisor and admin console']),
-            ('h1', 'Approve, publish and grow your advisor sites'),
-            ('p', ['Review what advisors submitted, publish approved updates, launch new sites from approved '
-                   'templates, and send custom designs to MarTech Engineering.']),
-            link_p('Open the approval queue', '/admin#approval-queue', 'b-a'),
-            link_p('Import a design from Figma', '/admin/figma-import', 'i-a'),
+            ('p', ['Supervisor console']),
+            ('h1', 'Keep every advisor site on brand and on track'),
+            ('p', ['See what is waiting for your review, publish approved updates, and launch a new advisor '
+                   'website whenever someone joins the team. Custom designs go to the design-and-build team as a short request.']),
+            link_p('Review submissions', '/admin/approvals', 'b-a'),
+            link_p('Launch a new site', '/admin/new-site', 'i-a'),
         ]]])],
         [
-            ('h2', 'Console'),
+            ('h2', 'At a glance'),
+            ('p', ['What is in the review queue right now. Open a card to work through it.']),
+            ('block', 'Compliance Queue (Summary)', [
+                [[('p', ['View all'])], [link_p('Open the approval queue', '/admin/approvals')]],
+            ]),
+        ],
+        [
+            ('h2', 'What would you like to do?'),
             ('block', 'Cards (Actions)', action_rows([
-                ('approve', 'Approve content', 'Approve or send back pages advisors submitted for compliance review.', 'Approval queue', '/admin#approval-queue'),
-                ('publish', 'Publish approved updates', 'Publish approved pages to the live site. Only the publish role can do this.', 'How to publish', '/admin#publish-approved-updates'),
-                ('template', 'Create a new advisor website', 'Pick a template and theme; the platform generates the starter site.', 'Pick a template', '/admin#create-a-new-advisor-website'),
-                ('layout', 'Advanced layout updates', 'Themes, templates, navigation, footers and new blocks for any advisor site.', 'Layout tools', '/admin#advanced-layout-updates'),
-                ('figma', 'Import a design from Figma', 'Send a Figma file to MarTech Engineering for an agentic Figma-to-EDS build.', 'Start a Figma import', '/admin/figma-import'),
-                ('audit', 'Compliance audit log', 'Every submission, approval and publish, in a Google Sheet for audits.', 'View the audit log', '/admin#compliance-audit-log'),
+                ('approve', 'Review and approve',
+                 'Approve a page or send it back with a note. Every decision is added to the audit log.',
+                 'Open the queue', '/admin/approvals'),
+                ('publish', 'Publish approved updates',
+                 'Once a page is approved, publish it and the live site updates worldwide in seconds.',
+                 'How to publish', '/admin/approvals#how-to-publish'),
+                ('users', 'See advisor sites',
+                 'Open any advisor website, check its review status, and jump to its preview.',
+                 'View sites', '/admin/sites'),
+                ('template', 'Launch a new website',
+                 'Pick a template and a look; the starter pages are created for the new advisor practice.',
+                 'Start a new site', '/admin/new-site'),
+                ('layout', 'Advanced layout updates',
+                 'Themes, navigation, footers and new sections for any advisor site, plus requests from advisors.',
+                 'Layout tools', '/admin/layouts'),
+                ('figma', 'Import a design from Figma',
+                 'Send a Figma file to the design-and-build team. They turn it into pages that match your approved look.',
+                 'Start an import', '/admin/figma-import'),
+                ('audit', 'Compliance audit log',
+                 'Every submission, approval and publish, in one spreadsheet you can hand to an auditor.',
+                 'View the log', '/admin/audit-log'),
+                ('lock', 'Roles and permissions',
+                 'Advisors edit and preview; supervisors publish; platform admins manage the setup.',
+                 'View roles', '/admin/roles'),
             ])),
         ],
         [
-            ('h2', 'Approval queue'),
-            ('p', ['Pages advisors submitted for review. Approve or Request changes; each decision is added to the '
-                   'compliance audit log.']),
-            ('block', 'Compliance Queue', [[[('p', ['Review queue'])]]]),
-            section_style('Light'),
-        ],
-        [
-            ('h2', 'Publish approved updates'),
-            ('ol', [
-                ['Open the approved page\u2019s preview (Open preview in the queue).'],
-                ['Click Publish in Sidekick. It is only enabled for the publish role; advisors see it greyed out.'],
-                ['The live site updates worldwide in seconds, and the Published event is added to the audit log.'],
-            ]),
-            ('p', ['Publishing many pages at once (for example a new site launch): select the documents in Google '
-                   'Drive and use Sidekick\u2019s bulk Publish.']),
-            ('p', [('i', 'Enforced by the platform: the Admin API rejects a publish from any account without the '
-                         'publish role, whether it comes from Sidekick, a script or a bookmark.')]),
-            section_style('Narrow'),
-        ],
-        [
-            ('h2', 'Create a new advisor website'),
-            ('p', ['Pick an approved template. The request form opens with it selected; choose the theme and '
-                   'the platform generates the site\u2019s starter documents.']),
-            ('block', 'Cards (Templates)', [
-                [[('h3', name), ('p', [desc]), link_p('See an example', ex), link_p('Use this template', f'/new-site?template={key}')]]
-                for name, key, desc, ex, _start in TEMPLATES
-            ]),
-            section_style('Light'),
-        ],
-        [
-            ('h2', 'Advanced layout updates'),
-            ('p', ['Changes beyond an advisor\u2019s section styles. All are made in documents or metadata, '
-                   'so they are previewed and approved like any other change.']),
-            ('block', 'Cards (Services)', service_rows([
-                ('layout', 'Switch theme or template', 'Change the Theme or Template value in a page\u2019s metadata, or for a whole site at once.'),
-                ('template', 'Navigation and footer', 'Edit the site\u2019s nav and footer documents: menu items, contact details, links.'),
-                ('add', 'Add blocks', 'Stats, testimonials, banners, service cards and steps from Sidekick > Library > Blocks.'),
-                ('figma', 'New block or template', 'Need something new? MarTech Engineering adds it once for every site.'),
-            ])),
-            link_p('See every section style and block variant', '/layouts', 'i-a'),
-            ('h3', 'Layout change requests from advisors'),
-            ('block', 'Submissions', [[[('p', ['Form'])], [('p', ['layout-change'])]]]),
-        ],
-        [
-            ('h2', 'Import a custom website design from Figma'),
-            ('p', ['Have a custom design for an advisor or a campaign? Send the Figma file to MarTech Engineering. '
-                   'Their agentic Figma-to-EDS process maps the design to approved blocks, builds anything new, '
-                   'and hands it back for review.']),
-            ('block', 'Cards (Steps)', [
-                [[('h3', 'Send the Figma file'), ('p', ['Fill in the import form: file link, site, pages and deadline.'])]],
-                [[('h3', 'Scope confirmed'), ('p', ['MarTech Engineering replies with scope and timeline, usually within two business days.'])]],
-                [[('h3', 'Agentic build'), ('p', ['AI agents map the design to blocks and draft new code; developers review every change.'])]],
-                [[('h3', 'Review and publish'), ('p', ['You review the preview, Compliance approves, then you publish.'])]],
-            ]),
-            link_p('Import a design from Figma', '/admin/figma-import', 'b-a'),
-            section_style('Dark'),
-        ],
-        [
-            ('h2', 'Compliance audit log'),
-            ('p', ['Every compliance submission, approval, request for changes and publish is appended to the '
-                   'compliance-audit-log Google Sheet in Drive (incoming tab): timestamp, event, advisor, site, '
-                   'page, change summary, submitted by, status, reviewer and decision date.']),
+            ('h2', 'Recent activity'),
+            ('p', ['The latest rows from this browser and the sample log. The spreadsheet in Drive is the official record.']),
             ('block', 'Submissions', [
                 [[('p', ['Form'])], [('p', ['compliance-audit'])]],
                 [[('p', ['Sheet'])], [('p', [('a', 'compliance-audit-log', DRIVE_AUDIT_LOG)])]],
             ]),
+            link_p('Open the full audit log', '/admin/audit-log', 'i-a'),
             section_style('Light'),
         ],
+    ],
+}
+
+PAGES['admin/approvals'] = {
+    'metadata': workspace_meta(
+        'Approvals | Supervisor console',
+        'Review pages advisors have submitted, approve them or send them back, then publish.',
+        '/admin/nav', '/admin/footer'),
+    'sections': [
+        [('block', 'Hero (Light, Page)', [[[
+            ('p', ['Approvals']),
+            ('h1', 'Review what advisors have sent'),
+            ('p', ['Approve a page or send it back with a short note. Each decision is written to the audit log. '
+                   'When a page is approved, you publish it and the live site updates.']),
+        ]]])],
         [
-            ('h2', 'Roles and permissions'),
+            ('block', 'Compliance Queue', [[[('p', ['Review queue'])]]]),
+        ],
+        [
+            ('h2', 'How to publish'),
+            ('ol', [
+                ['Open the approved page’s preview (Open preview in the queue).'],
+                ['Click Publish in the toolbar. It is only available on a supervisor account; advisors see it unavailable.'],
+                ['The live site updates worldwide in a few seconds, and a Published row is added to the audit log.'],
+            ]),
+            ('p', ['Publishing many pages at once, for example a new site launch: select the documents in the folder and use bulk Publish.']),
+            ('p', [('i', 'This is enforced by the platform: a publish from an account that is not a supervisor is rejected, '
+                         'whether it comes from the toolbar, a script or a bookmark.')]),
+            section_style('Light'),
+        ],
+    ],
+}
+
+PAGES['admin/sites'] = {
+    'metadata': workspace_meta(
+        'Advisor sites | Supervisor console',
+        'Every advisor website on this platform, with its current review status.',
+        '/admin/nav', '/admin/footer'),
+    'sections': [
+        [('block', 'Hero (Light, Page)', [[[
+            ('p', ['Sites']),
+            ('h1', 'Every advisor website, in one place'),
+            ('p', ['Open a preview, check review status, or start a brand-new site from an approved template.']),
+            link_p('Launch a new site', '/admin/new-site', 'b-a'),
+        ]]])],
+        [
+            ('block', 'Cards (Sites)', [
+                [[('p', [('b', 'Approved')]), ('h3', 'Maple Ridge Wealth Partners'),
+                  ('p', ['Calgary. Advisor team template, Forest look.']),
+                  link_p('Open preview', '/'), link_p('Team lead profile', '/advisors/jordan-lee')]],
+                [[('p', [('b', 'Pending review')]), ('h3', 'Harbourview Financial Group'),
+                  ('p', ['Halifax. Advisor team template, Harbour look. New home page waiting for review.']),
+                  link_p('Open preview', '/harbourview/'), link_p('Open in the queue', '/admin/approvals')]],
+                [[('p', [('b', 'Changes requested')]), ('h3', 'Northstar Planning'),
+                  ('p', ['Victoria. Solo advisor template, Slate look. Compliance asked for a wording change.']),
+                  link_p('Open preview', '/northstar/'), link_p('Open in the queue', '/admin/approvals')]],
+            ]),
+        ],
+    ],
+}
+
+PAGES['admin/new-site'] = {
+    'metadata': workspace_meta(
+        'New advisor website | Supervisor console',
+        'Launch a new advisor website from an approved template and look.',
+        '/admin/nav', '/admin/footer'),
+    'sections': [
+        [('block', 'Hero (Light, Page)', [[[
+            ('p', ['New site']),
+            ('h1', 'Launch a new advisor website'),
+            ('p', ['Pick a template and a look. The starter pages are created for the new practice, ready to edit, '
+                   'preview and send for review.']),
+        ]]])],
+        [
+            ('h2', 'Pick a template'),
+            ('block', 'Cards (Templates)', [
+                [[('h3', name), ('p', [desc]), link_p('See an example', ex),
+                  link_p('Use this template', f'/admin/new-site?template={key}')]]
+                for name, key, desc, ex, _start in TEMPLATES
+            ]),
+        ],
+        [
+            ('h2', 'Tell us about the practice'),
+            ('p', ['The form below prepares the starter documents and the one-step setup command. '
+                   'Harbourview and Northstar were created this way.']),
+            ('block', 'Site Request', [[[('p', ['New site'])]]]),
+            section_style('Light'),
+        ],
+    ],
+}
+
+PAGES['admin/layouts'] = {
+    'metadata': workspace_meta(
+        'Layouts | Supervisor console',
+        'Advanced layout updates for advisor websites, and requests from advisors.',
+        '/admin/nav', '/admin/footer'),
+    'sections': [
+        [('block', 'Hero (Light, Page)', [[[
+            ('p', ['Layouts']),
+            ('h1', 'Bigger layout changes, still in documents'),
+            ('p', ['Themes, navigation, footers and new sections are all edited in documents, so they are previewed '
+                   'and approved like any other change.']),
+            link_p('See every section style', '/layouts', 'i-a'),
+        ]]])],
+        [
+            ('h2', 'What you can change'),
             ('block', 'Cards (Services)', service_rows([
-                ('users', 'Advisor: author role', 'Edit, preview, delete their drafts and request reviews. Cannot publish or change site configuration.'),
-                ('approve', 'Supervisor: publish role', 'Everything an advisor can do, plus publish and unpublish, review snapshots and bulk publishing.'),
-                ('lock', 'Platform admin: admin role', 'Site configuration, roles, new sites and integrations. MarTech Engineering and the platform owner.'),
+                ('layout', 'Switch the look or template', 'Change the Theme or Template value in a page’s details, or for a whole site at once.'),
+                ('template', 'Navigation and footer', 'Edit the site’s menu, contact details and footer links in their documents.'),
+                ('add', 'Add a section', 'Facts, testimonials, banners and service cards can be added from the content library.'),
+                ('figma', 'Something entirely new', 'Need a new kind of section? Send it to the design-and-build team as a Figma import.'),
             ])),
-            ('p', [('i', 'Roles are set once in the site\u2019s access configuration (docs/access-admin.json in the '
-                         'repository) and enforced by the platform for every request.')]),
+        ],
+        [
+            ('h2', 'Requests from advisors'),
+            ('p', ['Layout changes advisors have asked for. Nothing submitted from this browser yet will show the sample row below.']),
+            ('block', 'Submissions', [[[('p', ['Form'])], [('p', ['layout-change'])]]]),
+            section_style('Light'),
         ],
     ],
 }
 
 PAGES['admin/figma-import'] = {
-    'metadata': {
-        'Title': 'Import a design from Figma | Supervisor console',
-        'Description': 'Request a custom advisor website design build from a Figma file. Sent to MarTech Engineering.',
-        'Theme': 'Forest',
-        'Robots': 'noindex',
-    },
+    'metadata': workspace_meta(
+        'Import a design from Figma | Supervisor console',
+        'Send a Figma file to the design-and-build team to turn into an advisor website.',
+        '/admin/nav', '/admin/footer'),
     'sections': [
-        [('block', 'Hero (Light)', [[[
-            ('p', ['Supervisor console \u00b7 MarTech Engineering intake']),
-            ('h1', 'Import a custom website design from Figma'),
-            ('p', ['Tell MarTech Engineering what to build. They run their agentic Figma-to-EDS process, '
-                   'reuse approved blocks wherever possible, and send you a preview to review.']),
+        [('block', 'Hero (Light, Page)', [[[
+            ('p', ['Figma import']),
+            ('h1', 'Turn a Figma file into an advisor website'),
+            ('p', ['Send the file to the design-and-build team. They map it to the approved sections you already use, '
+                   'build anything new, and send you a preview to review and publish.']),
             link_p('Back to the console', '/admin', 'i-a'),
         ]]])],
         [
-            ('block', 'Request Form', [
-                [[('p', ['Form'])], [('p', ['figma-import'])]],
-            ]),
+            ('block', 'Request Form', [[[('p', ['Form'])], [('p', ['figma-import'])]]]),
         ],
         [
             ('h2', 'What happens next'),
             ('block', 'Cards (Steps)', [
-                [[('h3', 'Intake'), ('p', ['Your request lands in the MarTech Engineering intake sheet with a reference number.'])]],
-                [[('h3', 'Scope and timeline'), ('p', ['The team checks the Figma file and replies by email with scope and a date.'])]],
-                [[('h3', 'Agentic build'), ('p', ['Agents map frames to blocks and themes and draft any new code. A developer reviews every change.'])]],
+                [[('h3', 'Intake'), ('p', ['Your request lands in the team’s intake sheet with a reference number.'])]],
+                [[('h3', 'Scope and timeline'), ('p', ['The team checks the file and replies by email with the scope and a date.'])]],
+                [[('h3', 'Build'), ('p', ['The team turns frames into the approved sections and drafts anything new. A person reviews every change.'])]],
                 [[('h3', 'Your review'), ('p', ['You get a preview link. Compliance reviews the content; you publish.'])]],
             ]),
             section_style('Light'),
@@ -1234,6 +1587,53 @@ PAGES['admin/figma-import'] = {
         [
             ('h2', 'Recent requests'),
             ('block', 'Submissions', [[[('p', ['Form'])], [('p', ['figma-import'])]]]),
+        ],
+    ],
+}
+
+PAGES['admin/audit-log'] = {
+    'metadata': workspace_meta(
+        'Audit log | Supervisor console',
+        'Every compliance submission, approval and publish, in one place.',
+        '/admin/nav', '/admin/footer'),
+    'sections': [
+        [('block', 'Hero (Light, Page)', [[[
+            ('p', ['Audit log']),
+            ('h1', 'A complete record of every review'),
+            ('p', ['Each submission, approval, request for changes and publish is added to a spreadsheet: '
+                   'when it happened, who did it, which site and page, and the decision.']),
+        ]]])],
+        [
+            ('block', 'Submissions', [
+                [[('p', ['Form'])], [('p', ['compliance-audit'])]],
+                [[('p', ['Sheet'])], [('p', [('a', 'compliance-audit-log', DRIVE_AUDIT_LOG)])]],
+            ]),
+            ('p', [('i', 'Rows from this browser appear at the top. The spreadsheet in Drive is the official record, '
+                         'once the forms have been connected (see the setup guide).')]),
+        ],
+    ],
+}
+
+PAGES['admin/roles'] = {
+    'metadata': workspace_meta(
+        'Roles and permissions | Supervisor console',
+        'Advisors edit and preview; supervisors publish; platform admins manage the setup.',
+        '/admin/nav', '/admin/footer'),
+    'sections': [
+        [('block', 'Hero (Light, Page)', [[[
+            ('p', ['Roles']),
+            ('h1', 'Who can do what'),
+            ('p', ['Advisors look after their own pages. Supervisors decide what goes live. '
+                   'The platform team looks after the setup. These rules are enforced, not just hidden in the toolbar.']),
+        ]]])],
+        [
+            ('block', 'Cards (Services)', service_rows([
+                ('users', 'Advisor', 'Edit, preview, delete drafts and request reviews. Cannot publish or change site settings.'),
+                ('approve', 'Supervisor', 'Everything an advisor can do, plus publish, unpublish, review locked versions and publish many pages at once.'),
+                ('lock', 'Platform admin', 'Site setup, roles, new sites and connections. The platform team and the owner.'),
+            ])),
+            ('p', [('i', 'Roles are set once in the site’s access configuration and checked on every publish. '
+                         'The /admin and /advisor pages themselves are ordinary pages; the real control is who is allowed to publish.')]),
         ],
     ],
 }

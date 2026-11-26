@@ -121,7 +121,11 @@ export default async function decorate(block) {
     // mark the link for the current page (ignoring in-page anchors)
     navSections.querySelectorAll('a[href]').forEach((a) => {
       const url = new URL(a.href, window.location);
-      if (!url.hash && url.pathname === window.location.pathname) a.setAttribute('aria-current', 'page');
+      const here = window.location.pathname.replace(/\/$/, '') || '/';
+      const path = url.pathname.replace(/\/$/, '') || '/';
+      if (here === path) a.setAttribute('aria-current', 'page');
+      else if (path !== '/' && path !== '/advisor' && path !== '/admin'
+        && here.startsWith(`${path}/`)) a.setAttribute('aria-current', 'page');
     });
     navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
       const subList = navSection.querySelector(':scope > ul');

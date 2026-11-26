@@ -7,6 +7,28 @@ the first time (steps 1 to 3 are the demo; steps 4 to 6 add the real form loggin
 Content folder: https://drive.google.com/drive/u/0/folders/1lC_k-4iU8d2cmsKwagdWcDEDz5wQRQ1O
 Preview host: https://main--slf-eds-demo1--michaelpereira78.aem.page (below: **PREVIEW**)
 
+## This update (workspace dashboards, Nov 26, 2026)
+
+You do **not** need to empty the Drive folder this time. Only add the new documents and
+replace the ones that changed, then Preview (and Publish) those.
+
+**Changed (replace the existing Google Doc):** `advisor`, `admin`, `admin/figma-import`, `demo`.
+
+**New (upload, keeping the folder path):**
+- `advisor/nav`, `advisor/footer`
+- `advisor/my-website`, `advisor/edit`, `advisor/approved-content`, `advisor/add-page`
+- `advisor/submit-review`, `advisor/layout-change`, `advisor/submissions`, `advisor/help`
+- `admin/nav`, `admin/footer`
+- `admin/approvals`, `admin/sites`, `admin/new-site`, `admin/layouts`, `admin/audit-log`, `admin/roles`
+
+Each advisor and admin page has `Nav` and `Footer` metadata pointing at `/advisor/nav` (or
+`/admin/nav`) and the matching footer, plus `Template: workspace`. After you Preview `advisor/nav`
+and `admin/nav`, the new menus appear. Preview the nav and footer documents as well as the pages.
+
+Forms still write to the same `forms/` sheets. Links with `?modal` open the form in a dialog;
+without JavaScript they are ordinary pages.
+
+
 ## 1. Replace the content in Google Drive (about 10 minutes)
 
 1. **Turn on automatic conversion.** Drive > gear icon > **Settings** > **General** > tick
@@ -35,7 +57,7 @@ In the Drive folder, open AEM Sidekick. Select files, then **Preview** (it works
 |---|---|
 | `index`, `nav`, `footer`, `advisors/jordan-lee` | `harbourview/*` (index, nav, footer) |
 | `fragments/disclosure`, everything in `fragments/products` and `fragments/cta` | `northstar/*` (index, nav, footer) |
-| `demo`, `advisor`, `admin`, `admin/figma-import`, `templates`, `layouts`, `approved-content`, `new-site`, `compliance` | `campaigns/retirement-checkup` |
+| `demo`, `advisor`, `advisor/*` (nav, footer and all subpages), `admin`, `admin/*` (nav, footer, approvals, sites, new-site, layouts, figma-import, audit-log, roles), `templates`, `layouts`, `approved-content`, `new-site`, `compliance` | `campaigns/retirement-checkup` |
 | `tools/sidekick/library`, everything in `tools/sidekick/templates` and `tools/sidekick/blocks` | |
 | the three sheets in `forms/` (only after step 4; the submission service reads the **published** form definition) | |
 

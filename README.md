@@ -32,8 +32,8 @@ workflow, new-site generation, configuration, security, known issues and backlog
 | Path | Purpose | Template / Theme | Compliance in demo |
 |---|---|---|---|
 | `/demo` | presenter hub: seven capability cards, links to both workspaces | n/a / Forest | n/a |
-| `/advisor` | Advisor workspace (author and preview; submit for review; layout requests; my submissions; help) | n/a / Forest | n/a |
-| `/admin`, `/admin/figma-import` | Supervisor console (approval queue, publish, new sites, advanced layout, audit log, roles) and the Figma import form for MarTech Engineering | n/a / Forest | n/a |
+| `/advisor` and `/advisor/*` | Advisor workspace dashboard and subpages (edit, add a page, approved content, submissions, help; review and layout forms also open as popups) | workspace / Forest | n/a |
+| `/admin` and `/admin/*` | Supervisor console dashboard and subpages (approvals, sites, new site, layouts, Figma import, audit log, roles) | workspace / Forest | n/a |
 | `/` , `/advisors/jordan-lee` | Maple Ridge team site and profile | advisor-team / Forest | Approved |
 | `/harbourview/` (+ nav, footer) | second firm | advisor-team / Harbour | Pending review |
 | `/northstar/` (+ nav, footer) | solo practice | solo-advisor / Slate | Changes requested |

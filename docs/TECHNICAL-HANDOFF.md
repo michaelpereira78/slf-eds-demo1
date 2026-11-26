@@ -1027,3 +1027,13 @@ References:
   Screenshots: `/workspace/slf-eds-demo1-shots/v2/` on the build machine.
 - Form flows tested: Figma import confirmation, advisor compliance submission, supervisor approval,
   both rows visible in the audit log table (demo mode, since local development never posts).
+
+## 16. Version 3 (Nov 26, 2026): workspace dashboards, own navigation, split pages
+
+The Advisor workspace and Supervisor console are no longer single long pages under the Maple Ridge marketing nav.
+
+- Each page sets `Template: workspace`, `Nav` and `Footer` metadata (`/advisor/nav`, `/admin/nav`, and matching footers). The existing header/footer already read those fields; no new publishing pipeline is required.
+- `templates/workspace/` is the app chrome: sticky bar, compact page headers, dashboard cards, status chips, and the modal dialog.
+- Dashboard pages (`/advisor`, `/admin`) show live "At a glance" counts via `Compliance Queue (Summary)` and link out to subpages. Forms stay on their own documents (`/advisor/submit-review`, `/advisor/layout-change`). A link with `?modal` opens that page in a dialog (the Metadata block is stripped so it is not loaded as a component); without JavaScript the same URL is a normal page.
+- Hero copy on the workspaces is written for a non-technical demo (no Sidekick, EDS, JSON or API in the heroes).
+- `/demo` hero and capability cards now lead with the two workspaces.

@@ -25,6 +25,7 @@ const TEMPLATES = {
   'advisor-team': { js: false },
   'solo-advisor': { js: false },
   campaign: { js: true },
+  workspace: { js: true },
 };
 
 /**

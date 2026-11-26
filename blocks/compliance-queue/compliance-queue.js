@@ -139,9 +139,27 @@ function renderItem(row, rerender, readOnly) {
   return item;
 }
 
+function readConfig(block) {
+  const config = {};
+  [...block.children].forEach((row) => {
+    const [k, v] = row.children;
+    if (!k) return;
+    const link = v && v.querySelector('a[href]');
+    let value = v ? v.textContent.trim() : '';
+    if (link) value = link.getAttribute('href');
+    config[k.textContent.trim().toLowerCase()] = value;
+  });
+  return config;
+}
+
 export default async function decorate(block) {
   // (Mine) variant: the advisor's read-only view of their own submissions
+  // (Summary) variant: just the status counts, used on the workspace dashboards
   const readOnly = block.classList.contains('mine');
+  const summaryOnly = block.classList.contains('summary');
+  const config = readConfig(block);
+  const viewAll = config['view all'] || config.link
+    || (readOnly ? '/advisor/submissions' : '/admin/approvals');
   block.textContent = '';
   let who = '';
   const picker = readOnly ? el('select', { class: 'cq-who', id: 'cq-who', 'aria-label': 'Show submissions for' }) : null;
@@ -168,11 +186,12 @@ export default async function decorate(block) {
     const counts = { pending: 0, changes: 0, approved: 0 };
     rows.forEach((r) => { const k = statusKey(r.Status); if (k in counts) counts[k] += 1; });
     summary.replaceChildren(...Object.entries(counts).map(([k, n]) => el(
-      'div',
-      { class: `cq-count status-${k}` },
+      summaryOnly ? 'a' : 'div',
+      { class: `cq-count status-${k}`, ...(summaryOnly ? { href: viewAll } : {}) },
       el('strong', { text: `${n}` }),
       el('span', { text: STATUS[k].label }),
     )));
+    if (summaryOnly) return;
     filters.replaceChildren(...FILTERS.map(([k, label]) => {
       const b = el('button', {
         type: 'button', class: 'cq-filter', 'aria-pressed': `${filter === k}`, text: label,
@@ -201,7 +220,12 @@ export default async function decorate(block) {
     picker.addEventListener('change', () => { who = picker.value; render(); });
     block.append(el('div', { class: 'cq-whobar' }, el('label', { for: 'cq-who', text: 'Signed in as (demo):' }), picker));
   }
-  block.append(summary, el('div', { class: 'cq-toolbar' }, filters, readOnly ? null : reset), status, list, footer);
+  if (summaryOnly) {
+    const all = el('p', { class: 'cq-viewall' }, el('a', { href: viewAll, class: 'button secondary', text: readOnly ? 'View my submissions' : 'Open the approval queue' }));
+    block.append(summary, all);
+  } else {
+    block.append(summary, el('div', { class: 'cq-toolbar' }, filters, readOnly ? null : reset), status, list, footer);
+  }
   document.addEventListener('request-form:submitted', () => render());
   await render();
 }

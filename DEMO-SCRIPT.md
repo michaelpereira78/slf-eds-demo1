@@ -12,8 +12,8 @@ Preview host used below: `https://main--slf-eds-demo1--michaelpereira78.aem.page
   2. The Google Drive content folder
   3. The `index` Google Doc (Maple Ridge home)
   4. The `northstar/index` Google Doc
-  5. **PREVIEW/advisor** (Advisor workspace)
-  6. **PREVIEW/admin** (Supervisor console)
+  5. **PREVIEW/advisor** (Advisor workspace dashboard)
+  6. **PREVIEW/admin** (Supervisor console dashboard)
   7. The `forms/compliance-audit-log` Google Sheet, on the `incoming` tab (only if ADMIN-SETUP step 4 is done)
 - On `/admin`, click **Reset demo** in the approval queue so it starts clean, and **Clear this
   browser** under the audit log and the Figma requests, so only your live rows show.
@@ -29,7 +29,7 @@ Preview host used below: `https://main--slf-eds-demo1--michaelpereira78.aem.page
 > Everything you'll see is authored in ordinary Google Docs, runs on Adobe Edge Delivery
 > Services, and no developer touches it during the demo."
 
-Point at the seven cards: "We'll go through each one." Then the **Two workspaces, two roles** cards (Advisor workspace, Supervisor console). Scroll to **Three sites, one platform**.
+Start with **Two workspaces, two roles**. Then the seven capability cards. Scroll to **Three sites, one platform**.
 
 ### 1:00 to 3:00: 2, Make a content change *(Tab 3, `index` doc)*
 > "Priya just earned a new designation."
@@ -82,20 +82,22 @@ Point at the seven cards: "We'll go through each one." Then the **Two workspaces
 
 ### 11:00 to 13:00: Two workspaces, two roles *(Tabs 5 and 6)*
 - **Advisor workspace** (`/advisor`):
-> "This is the advisor's home: edit, add a page, approved content, preview, layout requests,
-> submit for review, track submissions, help. Everything an advisor needs, nothing they shouldn't do."
-- Point at **You can / Your supervisor does**. In the advisor's Sidekick, show **Publish greyed out**:
-> "That's not a hidden button. The platform rejects a publish from an advisor account on the server."
-- Fill **Submit for compliance review** (Advisor `Priya Nair`, page `/campaigns/retirement-checkup`,
-  a one-line summary, tick the checks), **Submit for review**. Show the confirmation and reference number.
-- **Supervisor console** (`/admin`): the queue, **Approve** the campaign. Scroll to **Compliance
-  audit log**: both rows are there (Submitted, then Approved with reviewer and date).
-  If Option A/B is connected, switch to Tab 7 and show the same rows in the Google Sheet.
-> "Every submission and every decision lands in a spreadsheet Compliance can audit. Publishes are
-> also in the platform's own log."
-- Click **Import a design from Figma** > fill the form > **Send to MarTech Engineering**:
-> "Custom designs go to MarTech Engineering's agentic Figma-to-EDS build, with a reference number
-> and a row in their intake sheet. They come back as approved blocks, not a one-off site."
+> "This is the advisor's home. Notice the menu is theirs: Dashboard, My website, Edit content,
+> Approved content, Submissions, Help. Not the public marketing site."
+- Click **Submit a change for review**. The form opens as a popup. Fill Advisor `Priya Nair`,
+  page `/campaigns/retirement-checkup`, a one-line summary, tick the checks, **Submit for review**.
+  Show the confirmation and reference number. Close the popup and open **Submissions**.
+- In the advisor's toolbar, show **Publish unavailable**:
+> "That's not a hidden button. The platform rejects a publish from an advisor account."
+- **Supervisor console** (`/admin`):
+> "The supervisor gets a dashboard of their own, with a different menu: Approvals, Sites, New site,
+> Layouts, Figma import, Audit log, Roles."
+- Open **Approvals**, **Approve** the campaign. Then open **Audit log**: both rows are there
+  (Submitted, then Approved). If the sheet is connected, switch to Tab 7 and show the same rows.
+> "Every submission and every decision lands in a spreadsheet Compliance can audit."
+- Open **Figma import**, fill the form, **Send to MarTech Engineering**:
+> "Custom designs go to the design-and-build team as a short request, with a reference number
+> and a row in their intake sheet. They come back as approved sections, not a one-off site."
 
 ### 13:00 to 14:00: 1, Generate a new website *(PREVIEW/new-site, or **Create a new advisor website** on `/admin`)*
 - Type `Prairie Sky Financial`, `Regina, SK`, `Sam Rivera, CFP`. Click the **Harbour** and **Slate**

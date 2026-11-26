@@ -208,3 +208,9 @@
 .compliance-queue .cq-ready.cq-wait {
   color: var(--pending);
 }
+
+@media (width < 600px) {
+  .compliance-queue .cq-summary {
+    grid-template-columns: 1fr;
+  }
+}
