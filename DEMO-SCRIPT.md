@@ -5,7 +5,8 @@ Preview host used below: `https://main--slf-eds-demo1--michaelpereira78.aem.page
 
 ## Before the meeting (10 minutes)
 
-- One-time setup in [docs/ADMIN-SETUP.md](docs/ADMIN-SETUP.md) is done: content uploaded, previewed, Sidekick JSON posted.
+- Content is uploaded and previewed (v3 workspaces included). Confirm Sidekick JSON matches `docs/sidekick.json` ([docs/ADMIN-SETUP.md](docs/ADMIN-SETUP.md) step 3).
+- Until step 4 is done, forms stay in **demo mode** (confirmation says so; the audit sheet will be empty). Until step 5 is done, advisors can still publish — mention that, or skip the “Publish greyed out” contrast.
 - AEM Sidekick installed, pinned and turned on. Pop-ups allowed for the preview site.
 - Open these tabs, in this order:
   1. **PREVIEW/demo**, the hub (start here)

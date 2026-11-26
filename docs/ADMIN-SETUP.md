@@ -7,7 +7,30 @@ the first time (steps 1 to 3 are the demo; steps 4 to 6 add the real form loggin
 Content folder: https://drive.google.com/drive/u/0/folders/1lC_k-4iU8d2cmsKwagdWcDEDz5wQRQ1O
 Preview host: https://main--slf-eds-demo1--michaelpereira78.aem.page (below: **PREVIEW**)
 
+## Current status (November 26, 2026)
+
+Already done on the preview host:
+
+- v3 workspace content has been uploaded and previewed. Advisor, admin, all subpages, nav and
+  footer fragments, `/demo`, Harbourview and Northstar return 200, with the `workspace` template
+  and the correct nav (24 pages checked).
+- `tools/sidekick/library.json` and `compliance-queue.json` return 200.
+- Live (`.aem.live`) is still unpublished (404), which is fine until you choose to publish the
+  approved pages. Leave Harbourview, Northstar and the retirement-checkup campaign unpublished
+  so they can stay “pending review” in the walkthrough.
+
+Still on this list:
+
+- **Step 4** — forms sheets are not connected. Submissions stay in **demo mode** (the confirmation
+  says so; rows stay in the browser). Previewing a form-definition sheet (JSON 200) is not the
+  same as connecting Adobe’s Forms Submission Service or the Apps Script.
+- **Step 5** — `docs/access-admin.json` is not posted, so advisors can still publish. GET the
+  existing config first and keep your account in `admin` so you do not lock yourself out.
+- **Step 3** — confirm the posted Sidekick config matches the current `docs/sidekick.json`
+  (Advisor workspace, Supervisor console, and Publish confirmation).
+
 ## This update (workspace dashboards, Nov 26, 2026)
+
 
 You do **not** need to empty the Drive folder this time. Only add the new documents and
 replace the ones that changed, then Preview (and Publish) those.
