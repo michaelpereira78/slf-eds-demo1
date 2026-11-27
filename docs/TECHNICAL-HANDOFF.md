@@ -317,7 +317,7 @@ Everything committed is served by aem.live unless it is listed in `.hlxignore`.
 | `templates/advisor-team/advisor-team.css` | Accent rule under section H2s. |
 | `templates/solo-advisor/solo-advisor.css` | Rounded portrait, left accent bar on H2s, 880 px reading width. |
 | `templates/campaign/campaign.{css,js}` | Hides nav sections and hamburger, larger hero heading, sticky phone CTA (`.campaign-sticky-cta`) cloned from the hero's primary button. |
-| `templates/workspace/workspace.{css,js}` | App chrome for `/advisor` and `/admin`: workspace typography, current-page nav, and `?modal` dialogs (`loadModalFragment` strips `.metadata` before decorate). |
+| `templates/workspace/workspace.{css,js}` | App chrome for `/advisor` and `/admin`, styled like sunlife.ca (27 Nov 2026): Sun Life fonts and logo hotlinked from advisor.sunlife.ca (text fallback), a utility bar, a white header with a yellow current-page underline, a full-width photo banner with a dark-teal text panel on the two dashboards (JS adds `images/photos/ws-{advisor,admin}-hero.jpg` as the hero's photo row, so no doc change), cream page headers on subpages, square cards and forms with thin grey borders, yellow and navy-outline buttons, a white footer, and square `?modal` dialogs (`loadModalFragment` strips `.metadata` before decorate). All rules are scoped to `body.workspace`; the `Theme` metadata is ignored there. Photos: `tools/workspace-images.py`. |
 | `tools/sidekick/library.html` | Sidekick Library host page (loads `https://tools.aem.live/tools/sidekick/library/index.js`, base `/tools/sidekick/library.json`, plugins `blocks` and `approved-content`). |
 | `tools/sidekick/plugins/approved-content/approved-content.js` | Custom Library plugin listing `helix-approved-content` rows with **Copy link** and **Preview**. |
 | `tools/compliance/demo-queue.json` | Fallback compliance queue (5 rows), served from code. |
@@ -487,7 +487,7 @@ const TEMPLATES = {
 | `solo-advisor` | One-advisor home: portrait hero, story, services, sticky contact card | Rounded-corner portrait (320 px from 900 px), left accent border on H2s, 880 px max width for non-sidebar sections |
 | `campaign` | Landing page: centred hero, three benefits, approved CTA | Hides `.nav-sections` and hamburger; hero H1 `max-width: 12em`; `campaign.js` clones `.hero a.button.primary` into `.campaign-sticky-cta`, shown under 900 px once the hero leaves the viewport (`IntersectionObserver`), offset by `--author-bar-height` |
 | `sunlife-advisor` | Internal demo replica of the advisor.sunlife.ca layout (`/michael-pereira/`) | Sun Life tokens, hotlinked Sun Life fonts and logos, two-row header, white footer with regulator logos; JS adds logos and link icons and fixes nav highlighting. Details: `docs/MICHAEL-PEREIRA-REPLICA.md`. |
-| `workspace` | Advisor workspace and Supervisor console (not a marketing template) | App chrome, typography, current-page nav highlighting, and `?modal` popups. Selected with `Template: workspace` plus `Nav` / `Footer` pointing at `/advisor/nav` or `/admin/nav` (and the matching footer). |
+| `workspace` | Advisor workspace and Supervisor console (not a marketing template) | sunlife.ca look (logo, fonts, colours, photo banner on the dashboards), current-page nav highlighting, and `?modal` popups. Selected with `Template: workspace` plus `Nav` / `Footer` pointing at `/advisor/nav` or `/admin/nav` (and the matching footer). |
 
 ### 5.2 How to add a template (step by step)
 

@@ -2,6 +2,11 @@
  * Workspace template: modal forms and current-nav highlighting for subpages.
  * Links to a workspace page with ?modal (e.g. /advisor/submit-review?modal) open
  * in a dialog. Without JavaScript they are ordinary pages.
+ *
+ * Sun Life look (no content changes needed): adds the Sun Life logo and a utility bar to the
+ * header, the logo and a tagline to the footer, and a banner photo to the /advisor and /admin
+ * dashboard heroes. The logo is a public asset hotlinked from advisor.sunlife.ca; if it cannot
+ * load, a text wordmark is shown instead.
  */
 // eslint-disable-next-line import/no-cycle
 import { decorateMain } from '../../scripts/scripts.js';
@@ -32,6 +37,102 @@ async function loadModalFragment(path) {
   decorateMain(main);
   await loadSections(main);
   return main;
+}
+
+const LOGO = 'https://advisor.sunlife.ca/sites/default/files/2026-11/Logo_Sunlife_RGB.svg';
+
+/** Dashboard banner photos (free Pexels photos; see docs/PHOTO-CREDITS.md). */
+const HERO_PHOTOS = {
+  '/advisor': { src: '/images/photos/ws-advisor-hero.jpg', alt: 'An advisor smiling while working on a laptop at home' },
+  '/admin': { src: '/images/photos/ws-admin-hero.jpg', alt: 'Two colleagues in an office reviewing documents together' },
+};
+
+function workspaceRoot() {
+  const [first] = window.location.pathname.split('/').filter(Boolean);
+  return first === 'admin' ? '/admin' : '/advisor';
+}
+
+function logo(width, height) {
+  const img = el('img', {
+    class: 'sl-logo', src: LOGO, alt: 'Sun Life', width, height,
+  });
+  img.addEventListener('error', () => img.replaceWith(el('span', { class: 'sl-wordmark', text: 'Sun Life' })));
+  return img;
+}
+
+/** Add the banner photo row to the dashboard hero before the hero block decorates itself. */
+function addHeroPhoto(main) {
+  const here = window.location.pathname.replace(/\/$/, '');
+  const photo = HERO_PHOTOS[here];
+  const hero = main && main.querySelector('.hero');
+  if (!photo || !hero || hero.classList.contains('page') || hero.querySelector('picture')) return;
+  const img = el('img', {
+    src: photo.src, alt: photo.alt, width: 2400, height: 866, loading: 'eager',
+  });
+  hero.prepend(el('div', {}, el('div', {}, el('picture', {}, img))));
+}
+
+function decorateHeader(header) {
+  const nav = header.querySelector('nav');
+  const brand = header.querySelector('.nav-brand a');
+  if (brand && !brand.querySelector('.sl-logo, .sl-wordmark')) {
+    const label = brand.textContent.trim();
+    brand.setAttribute('aria-label', `Sun Life ${label}`);
+    brand.replaceChildren(logo(116, 28), el('span', { class: 'sl-ws-label', text: label }));
+  }
+  const wrapper = header.querySelector('.nav-wrapper');
+  if (wrapper && nav && !wrapper.querySelector('.sl-utility')) {
+    const admin = workspaceRoot() === '/admin';
+    const link = (href, text, external) => el('li', {}, el('a', external
+      ? {
+        href, text, target: '_blank', rel: 'noopener',
+      } : { href, text }));
+    const bar = el(
+      'div',
+      { class: 'sl-utility', role: 'navigation', 'aria-label': 'Utility' },
+      el(
+        'div',
+        { class: 'sl-utility-inner' },
+        el('p', { text: admin ? 'Supervisor console · Internal demo' : 'Advisor workspace · Internal demo' }),
+        el(
+          'ul',
+          {},
+          link('/demo', 'Demo hub'),
+          admin ? link('/advisor', 'Advisor workspace') : link('/admin', 'Supervisor console'),
+          link('https://www.sunlife.ca/', 'sunlife.ca', true),
+        ),
+      ),
+    );
+    wrapper.prepend(bar);
+  }
+}
+
+function decorateFooter(footer) {
+  const brand = footer.querySelector('.footer-brand');
+  if (brand && !brand.querySelector('.sl-logo, .sl-wordmark')) {
+    brand.prepend(logo(132, 32));
+  }
+  const legal = footer.querySelector('.footer-legal');
+  if (legal && !legal.querySelector('.sl-tagline')) {
+    legal.prepend(el('p', { class: 'sl-tagline', text: 'Making life brighter' }));
+  }
+}
+
+/** Runs fn once the header/footer block has finished loading (they load after the template). */
+function whenLoaded(selector, fn) {
+  const run = () => {
+    const block = document.querySelector(selector);
+    if (block && block.dataset.blockStatus === 'loaded') {
+      fn(block.closest('header, footer'));
+      return true;
+    }
+    return false;
+  };
+  if (run()) return;
+  const observer = new MutationObserver(() => {
+    if (run()) observer.disconnect();
+  });
+  observer.observe(document.body, { subtree: true, attributes: true, attributeFilter: ['data-block-status'] });
 }
 
 function isModalLink(anchor) {
@@ -115,7 +216,10 @@ async function openModal(href) {
   }
 }
 
-export default function decorate() {
+export default function decorate(main) {
+  addHeroPhoto(main);
+  whenLoaded('header .header', decorateHeader);
+  whenLoaded('footer .footer', decorateFooter);
   markCurrentNav();
   // header is loaded in parallel; mark again once it is in the page
   const header = document.querySelector('body > header');

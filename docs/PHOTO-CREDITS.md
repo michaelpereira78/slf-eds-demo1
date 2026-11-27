@@ -48,3 +48,17 @@ above; the "card" graphics and the headshot placeholder are drawn by the script,
 | `hero-mp-retirement.jpg`, `mp-retirement.jpg` | Resources banner, cards | crop of `retirement-walk.jpg` (Kindel Media) |
 | `mp-card-*.jpg` | "Stay informed" post images | generated (blurred photo + cream panel + headline), photos as above |
 | `mp-headshot-placeholder.jpg` | Michael's and the assistant's headshot | generated grey silhouette; replace with a real headshot |
+
+### Advisor workspace and Supervisor console banners (added 27 Nov 2026)
+
+Built by `tools/workspace-images.py` (2400 x 866 crops). Free to use under the
+[Pexels licence](https://www.pexels.com/license/); no Sun Life campaign photography is used.
+
+| File | Used for | Source |
+|---|---|---|
+| `ws-advisor-hero.jpg` | `/advisor` dashboard banner | Tima Miroshnichenko, https://www.pexels.com/photo/5198239/ |
+| `ws-admin-hero.jpg` | `/admin` dashboard banner | RDNE Stock project, https://www.pexels.com/photo/8069399/ |
+
+The Sun Life logo and the Sun Life New Text and Display fonts on these pages are not stored in
+this repository. They are hotlinked from public URLs on advisor.sunlife.ca.
+

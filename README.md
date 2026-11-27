@@ -42,8 +42,8 @@ workflow, new-site generation, configuration, security, known issues and backlog
 | Path | Purpose | Template / Theme | Compliance in demo |
 |---|---|---|---|
 | `/demo` | presenter hub: seven capability cards, links to both workspaces | n/a / Forest | n/a |
-| `/advisor` and `/advisor/*` | Advisor workspace dashboard and subpages (edit, add a page, approved content, submissions, help; review and layout forms also open as popups) | workspace / Forest | n/a |
-| `/admin` and `/admin/*` | Supervisor console dashboard and subpages (approvals, sites, new site, layouts, Figma import, audit log, roles) | workspace / Forest | n/a |
+| `/advisor` and `/advisor/*` | Advisor workspace dashboard and subpages (edit, add a page, approved content, submissions, help; review and layout forms also open as popups). Styled like sunlife.ca (logo, fonts, photo banner); the `Theme` value is ignored | workspace / Forest | n/a |
+| `/admin` and `/admin/*` | Supervisor console dashboard and subpages (approvals, sites, new site, layouts, Figma import, audit log, roles). Same sunlife.ca styling | workspace / Forest | n/a |
 | `/` , `/advisors/jordan-lee` | Maple Ridge team site and profile | advisor-team / Forest | Approved |
 | `/harbourview/` (+ nav, footer) | second firm | advisor-team / Harbour | Pending review |
 | `/northstar/` (+ nav, footer) | solo practice | solo-advisor / Slate | Changes requested |

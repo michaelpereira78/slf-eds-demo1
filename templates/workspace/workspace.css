@@ -1,70 +1,308 @@
 /* stylelint-disable no-descending-specificity */
 
 /*
- * Workspace template: Advisor workspace and Supervisor console.
- * App-like chrome, compact page headers, dashboard cards, modal dialogs.
+ * Workspace template: Advisor workspace (/advisor) and Supervisor console (/admin).
+ * Styled to look like sunlife.ca: white chrome with a utility bar and the Sun Life logo, a photo
+ * banner with a dark-teal text panel, cream page headers, square cards with thin grey borders,
+ * yellow primary and navy outlined secondary buttons, and a white footer.
+ * Fonts and the logo are hotlinked public assets from advisor.sunlife.ca (CORS enabled); if they
+ * are unreachable the page falls back to Helvetica/Arial and a text wordmark. All styling is
+ * scoped to body.workspace, so other templates are unaffected.
  */
+@font-face {
+  font-family: 'Sun Life New Text';
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://advisor.sunlife.ca/themes/hearsay_sunlife/fonts/SunLifeNewText-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Sun Life New Text';
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://advisor.sunlife.ca/themes/hearsay_sunlife/fonts/SunLifeNewText-Bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Sun Life New Display';
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://advisor.sunlife.ca/themes/hearsay_sunlife/fonts/SunLifeNewDisplay-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Sun Life New Display';
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://advisor.sunlife.ca/themes/hearsay_sunlife/fonts/SunLifeNewDisplay-Bold.woff') format('woff');
+}
 
 body.workspace {
-  background-color: #f3f5f4;
+  --sl-text: #202223;
+  --sl-grey: #5b6062;
+  --sl-grey-dark: #3d4142;
+  --sl-link: #00588b;
+  --sl-navy: #004570;
+  --sl-teal: #184a58;
+  --sl-teal-dark: #003946;
+  --sl-yellow: #ffcb05;
+  --sl-yellow-hover: #febe10;
+  --sl-cream: #fff8e0;
+  --sl-border: #dcdedf;
+  --sl-focus: #0093cf;
+  --sl-display-font: 'Sun Life New Display', georgia, serif;
+  --background-color: #fff;
+  --light-color: #f5f6f6;
+  --dark-color: var(--sl-grey);
+  --text-color: var(--sl-text);
+  --link-color: var(--sl-link);
+  --link-hover-color: var(--sl-navy);
+  --accent-color: var(--sl-yellow);
+  --accent-hover-color: var(--sl-yellow-hover);
+  --accent-tint: var(--sl-cream);
+  --navy-color: var(--sl-teal-dark);
+  --border-color: var(--sl-border);
+  --focus-color: var(--sl-focus);
+  --body-font-family: 'Sun Life New Text', helvetica, arial, sans-serif;
+  --heading-font-family: 'Sun Life New Text', helvetica, arial, sans-serif;
+  --radius: 0;
+  --card-shadow: none;
+  --card-shadow-hover: none;
+
+  overflow-x: clip;
+  background-color: #fff;
+  color: var(--sl-text);
+  font-family: var(--body-font-family);
 }
 
-body.workspace .icon {
-  /* icons already work via the cards mask; keep inherited colour */
+body.workspace :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--sl-text);
+  font-family: var(--heading-font-family);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-wrap: pretty;
 }
 
-/* sticky app bar, even on desktop */
+body.workspace main h2 {
+  font-size: 28px;
+  line-height: 36px;
+}
+
+body.workspace main h3 {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+body.workspace main a:any-link:not(.button) {
+  color: var(--sl-link);
+}
+
+body.workspace main a:any-link:not(.button):hover {
+  color: var(--sl-navy);
+}
+
+body.workspace :focus-visible {
+  outline: 2px solid var(--sl-focus);
+  outline-offset: 2px;
+}
+
+/* buttons: square, yellow primary, navy outlined secondary */
+body.workspace a.button:any-link,
+body.workspace button.button {
+  min-height: 44px;
+  border-width: 1px;
+  border-radius: 0;
+  padding: 10px 24px;
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 22px;
+}
+
+body.workspace a.button.primary,
+body.workspace button.button.primary {
+  border-color: var(--sl-yellow);
+  background-color: var(--sl-yellow);
+  color: var(--sl-text);
+}
+
+body.workspace a.button.primary:hover,
+body.workspace a.button.primary:focus-visible,
+body.workspace button.button.primary:hover,
+body.workspace button.button.primary:focus-visible {
+  border-color: var(--sl-yellow-hover);
+  background-color: var(--sl-yellow-hover);
+  color: var(--sl-text);
+}
+
+body.workspace a.button.secondary,
+body.workspace button.button.secondary {
+  border-color: var(--sl-navy);
+  background-color: #fff;
+  color: var(--sl-navy);
+}
+
+body.workspace a.button.secondary:hover,
+body.workspace a.button.secondary:focus-visible,
+body.workspace button.button.secondary:hover,
+body.workspace button.button.secondary:focus-visible {
+  border-color: var(--sl-navy);
+  background-color: var(--sl-navy);
+  color: #fff;
+}
+
+/* ---------- header: utility bar + white main row with the Sun Life logo ---------- */
+body.workspace header {
+  height: auto;
+  min-height: var(--nav-height);
+}
+
 body.workspace header .nav-wrapper {
   position: sticky;
   top: 0;
   z-index: 20;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--sl-border);
   background-color: #fff;
-  box-shadow: 0 1px 0 rgb(16 32 24 / 4%), 0 8px 24px rgb(16 32 24 / 4%);
+  box-shadow: none;
 }
 
-body.workspace header .nav-brand {
+body.workspace .sl-utility {
+  display: none;
+}
+
+body.workspace header nav {
+  font-family: var(--body-font-family);
+}
+
+body.workspace header nav .nav-brand {
   flex-basis: auto;
   white-space: nowrap;
 }
 
 body.workspace header nav .nav-brand a:any-link {
-  font-family: var(--heading-font-family);
-  font-size: 17px;
-  font-weight: 750;
-  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--sl-text);
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-decoration: none;
+}
+
+body.workspace header nav .nav-brand a:any-link::before {
+  display: none;
+}
+
+body.workspace header nav .nav-brand .sl-logo {
+  display: block;
+  width: 116px;
+  height: auto;
+}
+
+body.workspace header nav .nav-brand .sl-wordmark {
+  color: var(--sl-text);
+  font-family: var(--sl-display-font);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+body.workspace header nav .nav-brand .sl-ws-label {
+  padding-left: 16px;
+  border-left: 1px solid var(--sl-border);
+  color: var(--sl-grey-dark);
+  font-size: 16px;
+  line-height: 28px;
 }
 
 body.workspace header nav .nav-sections ul {
-  gap: 2px;
+  gap: 0;
 }
 
 body.workspace header nav .nav-sections a:any-link,
 body.workspace header nav .nav-sections button {
-  padding: 8px 10px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 0;
+  color: var(--sl-text);
+  font-size: 16px;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+body.workspace header nav .nav-sections a:any-link:hover {
+  color: var(--sl-navy);
+  text-decoration: underline;
+  text-underline-offset: 6px;
 }
 
 body.workspace header nav .nav-sections a[aria-current='page'] {
-  background-color: var(--accent-tint);
-  color: var(--navy-color);
+  background-color: transparent;
+  box-shadow: inset 0 -3px 0 var(--sl-yellow);
+  color: var(--sl-text);
+  font-weight: 700;
 }
 
 body.workspace header nav .nav-tools .button {
-  padding: 0.45em 1em;
-  font-size: 14px;
+  min-height: 40px;
+  padding: 8px 20px;
+  font-size: 15px;
+  white-space: nowrap;
 }
 
-/* a longer console nav wraps neatly rather than overflowing */
 @media (width >= 900px) {
+  body.workspace {
+    --nav-height: 72px;
+  }
+
+  body.workspace .sl-utility {
+    display: block;
+    border-bottom: 1px solid var(--sl-border);
+    background-color: #fff;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  body.workspace .sl-utility-inner {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    max-width: 1216px;
+    margin: 0 auto;
+    padding: 8px 32px;
+  }
+
+  body.workspace .sl-utility p {
+    margin: 0;
+    color: var(--sl-grey);
+  }
+
+  body.workspace .sl-utility ul {
+    display: flex;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  body.workspace .sl-utility a:any-link {
+    color: var(--sl-grey-dark);
+    text-decoration: none;
+  }
+
+  body.workspace .sl-utility a:any-link:hover {
+    color: var(--sl-navy);
+    text-decoration: underline;
+  }
+
   body.workspace header nav {
-    max-width: 1280px;
+    max-width: 1216px;
     height: auto;
     min-height: var(--nav-height);
-    padding-top: 6px;
-    padding-bottom: 6px;
+    padding: 8px 32px;
   }
 
   body.workspace header nav .nav-sections {
@@ -74,20 +312,37 @@ body.workspace header nav .nav-tools .button {
   body.workspace header nav .nav-sections ul {
     flex-wrap: wrap;
     justify-content: flex-end;
-    gap: 2px 4px;
+    gap: 0 2px;
   }
 }
 
-/* page canvas */
+@media (width >= 900px) {
+  body.workspace header nav {
+    gap: 0 24px;
+  }
+
+  body.workspace header nav .nav-sections a:any-link {
+    padding: 8px 7px;
+    font-size: 15px;
+  }
+}
+
+@media (width >= 900px) and (width < 1280px) {
+  body.workspace header nav .nav-brand .sl-ws-label {
+    display: none;
+  }
+}
+
+/* ---------- page canvas: a 1152px column, as on sunlife.ca ---------- */
 body.workspace main {
-  max-width: 1280px;
+  max-width: 1216px;
   margin: 0 auto;
   padding: 0 0 64px;
 }
 
 body.workspace main > .section {
   margin: 0;
-  padding: 28px 24px;
+  padding: 32px 16px;
 }
 
 body.workspace main > .section.hero-container {
@@ -103,16 +358,24 @@ body.workspace main > .section.accent {
 
 @media (width >= 900px) {
   body.workspace main > .section {
-    padding: 36px 32px;
+    padding: 40px 32px;
   }
 }
 
-/* compact, typographic hero — no marketing banner */
+body.workspace main > .section > .default-content-wrapper > h2 {
+  margin: 0 0 16px;
+}
+
+body.workspace main p {
+  overflow-wrap: break-word;
+}
+
+/* ---------- page header (subpages): a cream band ---------- */
 body.workspace .hero,
 body.workspace .hero.light {
   overflow: visible;
   background-color: transparent;
-  color: var(--text-color);
+  color: var(--sl-text);
 }
 
 body.workspace .hero::after {
@@ -120,107 +383,227 @@ body.workspace .hero::after {
 }
 
 body.workspace .hero > div {
-  max-width: 1280px;
-  padding: 36px 24px 8px;
+  max-width: none;
+  padding: 32px 16px 8px;
+}
+
+body.workspace .hero.page {
+  margin: 24px 16px 0;
+  background-color: var(--sl-cream);
 }
 
 body.workspace .hero.page > div {
-  padding: 28px 24px 0;
+  padding: 32px 24px;
 }
 
 body.workspace .hero h1,
 body.workspace .hero.light h1 {
-  max-width: 18em;
-  color: var(--navy-color);
-  font-size: clamp(32px, 4.4vw, 48px);
-  letter-spacing: -0.03em;
+  max-width: 20em;
+  margin: 0 0 16px;
+  color: var(--sl-text);
+  font-family: var(--sl-display-font);
+  font-size: clamp(32px, 4vw, 44px);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0;
   text-wrap: balance;
 }
 
 body.workspace .hero.page h1 {
-  font-size: clamp(26px, 3vw, 34px);
+  font-size: clamp(28px, 3vw, 36px);
 }
 
 body.workspace .hero .hero-content p,
 body.workspace .hero.light .hero-content p {
-  max-width: 62ch;
-  color: var(--dark-color);
-  font-size: var(--body-font-size-m);
+  max-width: 64ch;
+  color: var(--sl-text);
+  font-size: 18px;
+  line-height: 28px;
 }
 
 body.workspace .hero .hero-eyebrow,
 body.workspace .hero.light .hero-eyebrow {
-  background-color: var(--accent-tint);
-  color: var(--navy-color);
+  margin: 0 0 8px;
+  padding: 0;
+  border-radius: 0;
+  background-color: transparent;
+  color: var(--sl-grey-dark);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 20px;
+  text-transform: uppercase;
 }
 
 body.workspace .hero .hero-actions {
+  gap: 16px;
   margin-top: 24px;
 }
 
-body.workspace .hero.light a.button.secondary,
-body.workspace .hero a.button.secondary {
-  border-color: var(--navy-color);
-  color: var(--navy-color);
-}
-
-body.workspace .hero.light a.button.secondary:hover,
-body.workspace .hero.light a.button.secondary:focus-visible,
-body.workspace .hero a.button.secondary:hover,
-body.workspace .hero a.button.secondary:focus-visible {
-  background-color: var(--navy-color);
-  color: #fff;
-}
-
 @media (width >= 900px) {
-  body.workspace .hero > div,
+  body.workspace .hero.page {
+    margin: 32px 32px 0;
+  }
+
   body.workspace .hero.page > div {
-    padding-left: 32px;
-    padding-right: 32px;
+    padding: 40px 48px;
+  }
+
+  body.workspace .hero:not(.page, .hero-photo) > div {
+    padding: 40px 32px 8px;
   }
 }
 
-/* dashboard cards */
+/* ---------- dashboard banner: photo with a dark-teal text panel (sunlife.ca hero) ---------- */
+body.workspace .hero.hero-photo {
+  display: block;
+  min-height: 0;
+  margin: 0;
+  background-color: var(--sl-teal-dark);
+  color: #fff;
+}
+
+body.workspace .hero.hero-photo > .hero-bg {
+  position: relative;
+  inset: auto;
+  height: 220px;
+}
+
+body.workspace .hero.hero-photo > .hero-bg::after {
+  display: none;
+}
+
+body.workspace .hero.hero-photo > .hero-bg img {
+  object-position: 70% 20%;
+}
+
+body.workspace .hero.hero-photo > div:not(.hero-bg) {
+  position: relative;
+  box-sizing: border-box;
+  display: block;
+  padding: 28px 20px 32px;
+  background-color: var(--sl-teal-dark);
+}
+
+body.workspace .hero.hero-photo :is(h1, p),
+body.workspace .hero.hero-photo .hero-content p,
+body.workspace .hero.hero-photo .hero-eyebrow {
+  color: #fff;
+}
+
+body.workspace .hero.hero-photo h1 {
+  max-width: none;
+  font-size: 32px;
+  line-height: 40px;
+}
+
+body.workspace .hero.hero-photo .hero-content p {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+body.workspace .hero.hero-photo .hero-eyebrow {
+  color: var(--sl-yellow);
+  backdrop-filter: none;
+}
+
+body.workspace .hero.hero-photo a.button.secondary {
+  border-color: #fff;
+  background-color: transparent;
+  color: #fff;
+}
+
+body.workspace .hero.hero-photo a.button.secondary:hover,
+body.workspace .hero.hero-photo a.button.secondary:focus-visible {
+  border-color: #fff;
+  background-color: #fff;
+  color: var(--sl-teal-dark);
+}
+
+body.workspace .hero.hero-photo .hero-actions {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+@media (width >= 900px) {
+  /* full-bleed photo; the panel lines up with the 1152px content column */
+  body.workspace .hero.hero-photo {
+    min-height: 520px;
+    margin: 0 calc(50% - 50vw);
+    background-color: transparent;
+  }
+
+  body.workspace .hero.hero-photo > .hero-bg {
+    position: absolute;
+    inset: 0;
+    height: auto;
+  }
+
+  body.workspace .hero.hero-photo > div:not(.hero-bg) {
+    display: flex;
+    align-items: center;
+    width: 440px;
+    min-height: 520px;
+    margin: 0 0 0 max(32px, calc(50vw - 576px));
+    padding: 40px 32px;
+    background-color: rgb(0 57 70 / 92%);
+  }
+
+  body.workspace .hero.hero-photo .hero-content {
+    max-width: none;
+  }
+}
+
+/* ---------- dashboard cards: square, thin grey border, line icons ---------- */
 body.workspace .cards.actions > ul {
-  gap: 20px;
+  gap: 24px;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
 }
 
-body.workspace .cards.actions > ul > li {
-  border: 1px solid rgb(16 32 24 / 8%);
-  border-radius: 16px;
-  box-shadow: 0 1px 2px rgb(16 32 24 / 4%), 0 8px 24px rgb(16 32 24 / 5%);
-  background-color: #fff;
-  transition: transform 0.16s ease, box-shadow 0.16s ease;
-}
-
-body.workspace .cards.actions > ul > li:hover {
-  box-shadow: 0 2px 4px rgb(16 32 24 / 6%), 0 14px 32px rgb(16 32 24 / 8%);
-  transform: translateY(-2px);
-}
-
-body.workspace .cards.actions .cards-card-body {
-  padding: 22px 22px 20px;
-}
-
-body.workspace .cards.actions h3 {
-  font-size: 1.05rem;
-}
-
+body.workspace .cards.actions > ul > li,
 body.workspace .cards.services > ul > li,
 body.workspace .cards.templates > ul > li,
 body.workspace .cards.sites > ul > li {
-  border-radius: 16px;
-  border: 1px solid rgb(16 32 24 / 8%);
-  box-shadow: 0 1px 2px rgb(16 32 24 / 4%), 0 8px 24px rgb(16 32 24 / 5%);
+  border: 1px solid var(--sl-border);
+  border-radius: 0;
+  box-shadow: none;
   background-color: #fff;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+body.workspace .cards.actions > ul > li:hover,
+body.workspace .cards.services > ul > li:hover,
+body.workspace .cards.templates > ul > li:hover,
+body.workspace .cards.sites > ul > li:hover {
+  border-color: var(--sl-navy);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 8%);
+  transform: none;
+}
+
+body.workspace .cards.actions .cards-card-body {
+  padding: 24px;
+}
+
+body.workspace .cards h3 {
+  margin-top: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
 }
 
 body.workspace .cards .cards-icon {
-  width: 44px;
-  height: 44px;
-  margin-bottom: 14px;
-  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  border-radius: 0;
+  background-color: transparent;
+  place-items: center start;
+}
+
+body.workspace .cards .cards-icon::before {
+  width: 40px;
+  height: 40px;
+  background-color: var(--sl-navy);
 }
 
 /* status chip in a card (a bold first line) */
@@ -229,26 +612,27 @@ body.workspace .chip {
   display: inline-flex;
   align-items: center;
   margin: 0 0 8px;
-  padding: 3px 10px;
-  border-radius: 999px;
-  background-color: var(--accent-tint);
-  color: var(--navy-color);
+  padding: 2px 8px;
+  border-radius: 0;
+  background-color: var(--sl-cream);
+  color: var(--sl-text);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-/* queue + tables sit on a white surface */
+/* ---------- queues, tables and forms: white surfaces with a thin border ---------- */
 body.workspace .compliance-queue,
 body.workspace .submissions,
 body.workspace .request-form,
 body.workspace .accordion,
 body.workspace .site-request {
   padding: 24px;
-  border: 1px solid rgb(16 32 24 / 8%);
-  border-radius: 16px;
+  border: 1px solid var(--sl-border);
+  border-radius: 0;
   background-color: #fff;
-  box-shadow: 0 1px 2px rgb(16 32 24 / 4%), 0 8px 24px rgb(16 32 24 / 5%);
+  box-shadow: none;
 }
 
 body.workspace .compliance-queue.summary {
@@ -260,58 +644,157 @@ body.workspace .compliance-queue.summary {
 }
 
 body.workspace .compliance-queue.summary .cq-summary {
-  gap: 16px;
+  gap: 24px;
 }
 
 body.workspace .compliance-queue.summary .cq-count {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 20px 22px;
-  border: 1px solid rgb(16 32 24 / 8%);
-  border-top: 6px solid var(--tone);
-  border-radius: 16px;
-  box-shadow: 0 1px 2px rgb(16 32 24 / 4%), 0 8px 24px rgb(16 32 24 / 5%);
+  padding: 20px 24px;
+  border: 1px solid var(--sl-border);
+  border-top: 4px solid var(--tone);
+  border-radius: 0;
+  box-shadow: none;
   background-color: #fff;
   text-decoration: none;
   color: inherit;
 }
 
 body.workspace .compliance-queue.summary .cq-count:hover {
-  box-shadow: 0 2px 4px rgb(16 32 24 / 6%), 0 14px 32px rgb(16 32 24 / 8%);
+  border-color: var(--sl-navy);
+  border-top-color: var(--tone);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 8%);
 }
 
 body.workspace .compliance-queue.summary .cq-viewall {
   margin: 16px 0 0;
 }
 
+body.workspace :is(.cq-filter, .rf-check) {
+  border-radius: 0;
+}
+
+body.workspace :is(.cq-pill, .sub-pill) {
+  border-radius: 2px;
+}
+
+body.workspace :is(input, select, textarea) {
+  border-radius: 0;
+}
+
+body.workspace :is(input, select, textarea):focus-visible {
+  border-color: var(--sl-focus);
+}
+
+/* ---------- sections ---------- */
 body.workspace .section.light {
   background-color: transparent;
 }
 
 body.workspace .section.dark {
-  margin: 12px 24px 0;
+  margin: 16px 16px 0;
   padding-left: 24px;
   padding-right: 24px;
-  border-radius: 20px;
+  border-radius: 0;
+  background-color: var(--sl-teal-dark);
+}
+
+body.workspace .section.dark :is(h2, h3, p) {
+  color: #fff;
+}
+
+body.workspace main .section.dark a:any-link:not(.button) {
+  color: #fff;
+  text-decoration: underline;
 }
 
 @media (width >= 900px) {
   body.workspace .section.dark {
     margin-left: 32px;
     margin-right: 32px;
-    padding-left: 32px;
-    padding-right: 32px;
+    padding-left: 48px;
+    padding-right: 48px;
   }
 }
 
-/* quieter workspace footer */
+/* "How it works" style columns in a light section */
+body.workspace .columns img {
+  border-radius: 0;
+}
+
+/* ---------- footer: white, link columns, legal row ---------- */
+body.workspace footer {
+  border-top: 1px solid var(--sl-border);
+  background-color: #fff;
+  color: var(--sl-text);
+  font-size: 14px;
+}
+
 body.workspace footer .footer {
-  background-color: #1b2b24;
+  background-color: #fff;
+}
+
+body.workspace footer .footer > div {
+  max-width: 1216px;
+}
+
+body.workspace footer .footer a:any-link {
+  color: var(--sl-text);
+}
+
+body.workspace footer .footer-links a:any-link:hover {
+  color: var(--sl-navy);
+}
+
+body.workspace footer .footer-brand a:any-link {
+  color: var(--sl-text);
+  font-family: var(--body-font-family);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+body.workspace footer .footer-brand .sl-logo {
+  display: block;
+  width: 132px;
+  height: auto;
+  margin-bottom: 16px;
+}
+
+body.workspace footer .footer-brand p:not(:first-child) {
+  color: var(--sl-grey-dark);
+}
+
+body.workspace footer .footer-col strong {
+  color: var(--sl-text);
+  font-size: 16px;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 body.workspace footer .footer-legal {
-  opacity: 0.9;
+  border-top: 1px solid var(--sl-border);
+  color: var(--sl-grey);
+  opacity: 1;
+}
+
+body.workspace footer .footer-legal p:first-child {
+  display: block;
+  margin-bottom: 4px;
+  padding: 0;
+  border-radius: 0;
+  background-color: transparent;
+  color: var(--sl-text);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+body.workspace footer .sl-tagline {
+  margin: 0 0 12px;
+  color: var(--sl-text);
+  font-family: var(--sl-display-font);
+  font-size: 24px;
+  line-height: 32px;
 }
 
 /* native modal */
@@ -448,4 +931,47 @@ body.workspace .compliance-queue.summary .cq-whobar {
   body.workspace header nav[aria-expanded="false"] .nav-tools {
     display: none;
   }
+}
+
+/* dialog in the Sun Life look: square corners, thin border, display-font title */
+body .workspace-dialog,
+body .workspace-dialog-panel {
+  border-radius: 0;
+}
+
+body .workspace-dialog {
+  box-shadow: 0 16px 48px rgb(0 0 0 / 24%);
+}
+
+body .workspace-dialog::backdrop {
+  background-color: rgb(0 57 70 / 60%);
+  backdrop-filter: none;
+}
+
+body .workspace-dialog-panel {
+  border-top: 6px solid var(--sl-yellow, #ffcb05);
+}
+
+body .workspace-dialog-close {
+  border-radius: 0;
+  background-color: transparent;
+  color: var(--sl-text, #202223);
+  font-size: 28px;
+}
+
+body .workspace-dialog-close:hover,
+body .workspace-dialog-close:focus-visible {
+  background-color: var(--sl-cream, #fff8e0);
+}
+
+body .workspace-dialog-head h1,
+body .workspace-dialog-head h2 {
+  color: var(--sl-text, #202223);
+  font-family: var(--sl-display-font, inherit);
+  font-weight: 400;
+}
+
+body.workspace .workspace-dialog-body :is(.request-form, .site-request) {
+  padding: 8px 8px 16px;
+  border: 0;
 }
