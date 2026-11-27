@@ -8,6 +8,15 @@ Docs (or Word) and runs on one shared codebase.
 > Group, Northstar Planning and every person, phone number (555) and email address (`@example.com`)
 > are fictional. The colours are deliberately unlike any real brand.
 
+> **Exception: `/michael-pereira/` is an internal demo replica of a real Sun Life advisor site.**
+> At Michael's request (26 Nov 2026) it reproduces the layout of
+> https://advisor.sunlife.ca/ben.aldridge/ with Michael Pereira's name, using the `sunlife-advisor`
+> template. The Sun Life fonts and the Sun Life, CIPF and CIRO logos are **hotlinked** from
+> advisor.sunlife.ca (not copied into this repo). The headshot is a grey placeholder, and the phone,
+> email and address are placeholders (555 number, `@example.com`, "Example Street"). Keep it internal:
+> do not publish it to a public audience or present it as a live advisor site. See
+> [docs/MICHAEL-PEREIRA-REPLICA.md](docs/MICHAEL-PEREIRA-REPLICA.md).
+
 **Start here:** https://main--slf-eds-demo1--michaelpereira78.aem.page/demo (after the content
 upload in [docs/ADMIN-SETUP.md](docs/ADMIN-SETUP.md)).
 **Presenter script:** [DEMO-SCRIPT.md](DEMO-SCRIPT.md), a 15-minute walkthrough of the seven capabilities plus the Advisor workspace and Supervisor console.
@@ -39,6 +48,7 @@ workflow, new-site generation, configuration, security, known issues and backlog
 | `/harbourview/` (+ nav, footer) | second firm | advisor-team / Harbour | Pending review |
 | `/northstar/` (+ nav, footer) | solo practice | solo-advisor / Slate | Changes requested |
 | `/campaigns/retirement-checkup` | campaign landing page | campaign / Forest | Pending review |
+| `/michael-pereira/` (+ about, products-services, stay-informed, resources, connect, nav, footer) | internal demo replica of a Sun Life advisor site (advisor.sunlife.ca layout) for Michael Pereira | sunlife-advisor / n/a | Pending review |
 | `/layouts`, `/templates`, `/approved-content`, `/new-site`, `/compliance` | capability pages | n/a / Forest | n/a |
 | `/fragments/...` | approved content (5 fragments) | n/a | Approved (badge) |
 | `/tools/sidekick/templates/*`, `/tools/sidekick/blocks/*`, `/tools/sidekick/library` (sheet) | Sidekick Library content | n/a | n/a |
@@ -56,7 +66,12 @@ blocks/             hero, team-cards, contact, disclosure, callout, cards, colum
                     request-form (review / layout / Figma intake), stats, testimonials, banner,
                     library-metadata (hidden)
 templates/          advisor-team, solo-advisor, campaign (approved templates);
-                    workspace (Advisor and Supervisor app chrome)
+                    workspace (Advisor and Supervisor app chrome);
+                    sunlife-advisor (internal replica of the advisor.sunlife.ca layout)
+blocks/ (replica)   advisor-banner, advisor-profile, media-text, info-cards, office-map,
+                    lead-form, cta-box (used by the sunlife-advisor template)
+tools/michael-pereira/   content_mp.py (replica content), build.py (drafts, .docx, da.live HTML),
+                    make-images.py (crops and generated card images)
 styles/styles.css   tokens, BRAND THEMES (forest default, harbour, slate), section styles
 styles/compliance.css   status bar and review dialog (preview hosts only)
 scripts/compliance*.js  status bar, review dialog, queue data

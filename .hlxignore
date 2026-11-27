@@ -11,3 +11,4 @@ docs/*
 tools/*.py
 tools/__pycache__/*
 tools/new-site/*
+tools/michael-pereira/*

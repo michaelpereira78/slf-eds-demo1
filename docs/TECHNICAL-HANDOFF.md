@@ -433,6 +433,7 @@ Block names in documents are case-insensitive; variants go in brackets: `Hero (L
 | `library-metadata` | Rows `name`, `description`, `type` | none | Read by the Sidekick Library; removed from the rendered page. |
 | `widget` | Auto-built from links containing `/widgets/` | none | Boilerplate. There is **no `/widgets/` folder** in this repo, so it is unused. |
 | `header`, `footer` | Loaded automatically | none | Section 2.2. |
+| `advisor-banner`, `advisor-profile`, `media-text`, `info-cards`, `office-map`, `lead-form`, `cta-box` | See `docs/MICHAEL-PEREIRA-REPLICA.md` | `Media Text (right, video)`, `Info Cards (news / plain)` | Used only by the `sunlife-advisor` template (internal replica of advisor.sunlife.ca at `/michael-pereira/`). Shared helper `scripts/advisor-ui.js`. |
 
 **Buttons.** A link alone in a paragraph becomes a button only if formatted: **bold** gives
 `.button.primary`, *italic* gives `.button.secondary`, ***bold italic*** gives `.button.accent`.
@@ -470,6 +471,7 @@ const TEMPLATES = {
   'solo-advisor': { js: false },
   campaign: { js: true },
   workspace: { js: true },
+  'sunlife-advisor': { js: true },
 };
 ```
 
@@ -484,6 +486,7 @@ const TEMPLATES = {
 | `advisor-team` | Team home page: hero, team cards, contact, disclosure | 56 x 4 px accent rule under section H2s |
 | `solo-advisor` | One-advisor home: portrait hero, story, services, sticky contact card | Rounded-corner portrait (320 px from 900 px), left accent border on H2s, 880 px max width for non-sidebar sections |
 | `campaign` | Landing page: centred hero, three benefits, approved CTA | Hides `.nav-sections` and hamburger; hero H1 `max-width: 12em`; `campaign.js` clones `.hero a.button.primary` into `.campaign-sticky-cta`, shown under 900 px once the hero leaves the viewport (`IntersectionObserver`), offset by `--author-bar-height` |
+| `sunlife-advisor` | Internal demo replica of the advisor.sunlife.ca layout (`/michael-pereira/`) | Sun Life tokens, hotlinked Sun Life fonts and logos, two-row header, white footer with regulator logos; JS adds logos and link icons and fixes nav highlighting. Details: `docs/MICHAEL-PEREIRA-REPLICA.md`. |
 | `workspace` | Advisor workspace and Supervisor console (not a marketing template) | App chrome, typography, current-page nav highlighting, and `?modal` popups. Selected with `Template: workspace` plus `Nav` / `Footer` pointing at `/advisor/nav` or `/admin/nav` (and the matching footer). |
 
 ### 5.2 How to add a template (step by step)

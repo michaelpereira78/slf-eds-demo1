@@ -1,0 +1,63 @@
+/* stylelint-disable no-descending-specificity */
+
+.media-text .media-text-row {
+  display: grid;
+  gap: 24px;
+}
+
+.media-text .media-text-row + .media-text-row {
+  margin-top: 56px;
+}
+
+.media-text .media-text-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.media-text.video .media-text-media img,
+.media-text .video-poster img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.media-text .media-text-text > :first-child {
+  margin-top: 0;
+}
+
+.media-text .media-text-text h2 {
+  margin: 0 0 16px;
+  font-size: 28px;
+  line-height: 36px;
+}
+
+.media-text .media-text-text h3 {
+  margin: 0;
+}
+
+.media-text .media-text-text p {
+  margin: 0 0 24px;
+}
+
+.media-text .media-text-text h3 + p {
+  margin-top: 0;
+}
+
+.media-text .media-text-text > p:last-child {
+  margin-bottom: 0;
+}
+
+@media (width >= 900px) {
+  .media-text .media-text-row {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  .media-text.right .media-text-row .media-text-media {
+    order: 2;
+  }
+
+  .media-text.right .media-text-row.media-only .media-text-media {
+    grid-column: 2;
+  }
+}

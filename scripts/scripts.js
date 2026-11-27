@@ -26,6 +26,7 @@ const TEMPLATES = {
   'solo-advisor': { js: false },
   campaign: { js: true },
   workspace: { js: true },
+  'sunlife-advisor': { js: true },
 };
 
 /**

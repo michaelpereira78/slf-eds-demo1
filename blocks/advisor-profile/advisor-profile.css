@@ -1,0 +1,76 @@
+.advisor-profile > div {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.advisor-profile .advisor-profile-photo img {
+  display: block;
+  box-sizing: border-box;
+  width: 96px;
+  height: 96px;
+  border: 1px solid #c3c8cb;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.advisor-profile .advisor-profile-details h2 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  line-height: 36px;
+}
+
+.advisor-profile .advisor-profile-details p {
+  margin: 0;
+  color: var(--sl-grey, #5b6062);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.advisor-profile .advisor-profile-details p:has(> a) {
+  margin-top: 8px;
+}
+
+.advisor-profile .advisor-profile-social {
+  display: flex;
+  gap: 47px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.advisor-profile .advisor-profile-social a:any-link {
+  display: block;
+  width: 28px;
+  height: 28px;
+  color: #000;
+}
+
+.advisor-profile .advisor-profile-social svg {
+  display: block;
+  width: 28px;
+  height: 28px;
+  fill: currentcolor;
+}
+
+@media (width >= 900px) {
+  .advisor-profile > div {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .advisor-profile .advisor-profile-photo {
+    padding-top: 40px;
+  }
+
+  .advisor-profile .advisor-profile-photo img {
+    width: 160px;
+    height: 160px;
+  }
+
+  .advisor-profile .advisor-profile-details h2 {
+    font-size: 32px;
+    line-height: 40px;
+  }
+}

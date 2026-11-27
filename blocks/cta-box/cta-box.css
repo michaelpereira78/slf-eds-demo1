@@ -1,0 +1,37 @@
+.cta-box > div {
+  display: grid;
+  gap: 24px;
+  padding: 24px 16px;
+  background-color: var(--sl-cream, #fff8e0);
+}
+
+.cta-box .cta-box-media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.cta-box .cta-box-text h2 {
+  margin: 0 0 16px;
+  font-size: 28px;
+  line-height: 36px;
+}
+
+.cta-box .cta-box-text p {
+  margin: 0 0 16px;
+}
+
+@media (width >= 900px) {
+  .cta-box > div {
+    grid-template-columns: minmax(0, 516px) minmax(0, 1fr);
+    align-items: center;
+    gap: 48px;
+    padding: 24px;
+  }
+
+  .cta-box .cta-box-media img {
+    height: 204px;
+    aspect-ratio: auto;
+  }
+}

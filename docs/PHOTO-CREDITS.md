@@ -32,3 +32,19 @@ Fonts: [Manrope](https://github.com/sharanda/manrope) and [Fraunces](https://git
 both under the SIL Open Font License 1.1, self-hosted in `fonts/`.
 
 Icons in `icons/` were drawn for this project (simple 24 px stroke icons) and carry no third-party license.
+
+### `/michael-pereira/` replica (added 26 Nov 2026)
+
+Built by `tools/michael-pereira/make-images.py` (crops of the Pexels photos below and of the photos
+above; the "card" graphics and the headshot placeholder are drawn by the script, no third-party artwork).
+
+| File | Used for | Source |
+|---|---|---|
+| `hero-mp-autumn-walk.jpg` | Home and Connect banner | Gustavo Fring, https://www.pexels.com/photo/4173151/ |
+| `hero-mp-boardwalk.jpg`, `mp-family.jpg` | About banner, product cards | PNW Production, https://www.pexels.com/photo/8576088/ |
+| `mp-coffee.jpg` | Home "Products and services", cards | Engin Akyurt, https://www.pexels.com/photo/35835482/ |
+| `hero-mp-meeting.jpg`, `mp-meeting.jpg`, `mp-video-intro.jpg` | Products banner, CTA box, intro video poster | crop of `advisor-meeting.jpg` (Kampus Production) |
+| `hero-mp-planning.jpg`, `mp-planning.jpg`, `mp-video-products.jpg` | Stay informed banner, About, video poster | crop of `couple-planning.jpg` (Vitaly Gariev) |
+| `hero-mp-retirement.jpg`, `mp-retirement.jpg` | Resources banner, cards | crop of `retirement-walk.jpg` (Kindel Media) |
+| `mp-card-*.jpg` | "Stay informed" post images | generated (blurred photo + cream panel + headline), photos as above |
+| `mp-headshot-placeholder.jpg` | Michael's and the assistant's headshot | generated grey silhouette; replace with a real headshot |

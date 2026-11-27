@@ -287,8 +287,10 @@ The best source is the **live preview of the existing site**: the 53 pages and 5
 published to `aem.page`. Two ready-made lists are in this repo (every URL was checked as HTTP 200 on
 26 Nov 2026):
 
-- [`docs/da-import-urls.txt`](da-import-urls.txt): 53 pages (home, `/advisor`, `/admin`, subpages,
-  nav and footer documents, fragments, Sidekick library blocks and templates, firm sites, campaigns)
+- [`docs/da-import-urls.txt`](da-import-urls.txt): 61 pages (home, `/advisor`, `/admin`, subpages,
+  nav and footer documents, fragments, Sidekick library blocks and templates, firm sites, campaigns,
+  and the 8 `/michael-pereira/` replica pages added 26 Nov 2026, which exist only after Michael
+  uploads and previews them in Drive)
 - [`docs/da-import-sheets.txt`](da-import-sheets.txt): the 5 sheets as `.json` URLs
   (`compliance-queue`, `tools/sidekick/library`, and the three `forms/*` sheets)
 
@@ -336,6 +338,14 @@ list. In the da.live content browser, use the search field, press **Enter** to s
 open **Advanced Search**, and use **Replace with** to change `slf-eds-demo1--michaelpereira78` to
 `slf-eds-demo1-da--michaelpereira78`. Adobe warns that replacing text **does not create a version**,
 so search first and read the match list before replacing.
+
+---
+
+### 9a. The Sun Life advisor replica (`/michael-pereira/`)
+
+The 8 replica pages are in `da-import-urls.txt` too. If the Drive version is not previewed yet,
+upload the ready-made DA HTML from the content zip instead (`da/michael-pereira/*.html`). Steps:
+[MICHAEL-PEREIRA-REPLICA.md](MICHAEL-PEREIRA-REPLICA.md#version-2-dalive-site-slf-eds-demo1-da).
 
 ---
 
